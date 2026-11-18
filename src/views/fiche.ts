@@ -3,10 +3,10 @@ import { noteNom, suiviDe } from '../store'
 import { couleurNote, h, miniCarPpp, nomFamille, puceCompte, resume } from '../ui'
 import { ecritureHtml } from './synthese'
 
-const repliable = 'group rounded-2xl bg-slate-50 dark:bg-slate-800/50'
+const repliable = 'group rounded-2xl bg-neutral-50 dark:bg-neutral-800/50'
 const resumeRepliable =
   'flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-semibold [&::-webkit-details-marker]:hidden'
-const chevron = '<span aria-hidden="true" class="text-xl text-slate-400 transition group-open:rotate-90">›</span>'
+const chevron = '<span aria-hidden="true" class="text-xl text-neutral-400 transition group-open:rotate-90">›</span>'
 
 export function ficheHtml(c: Compte): string {
   const f = familleDe(c)
@@ -19,7 +19,7 @@ export function ficheHtml(c: Compte): string {
       const s = suiviDe(`${p.id}:${c.id}`)
       const etiquette = s
         ? `<span class="font-semibold ${couleurNote[s.note].texte}">${h(noteNom[s.note])}</span>`
-        : '<span class="text-slate-500 dark:text-slate-400">Jamais vue</span>'
+        : '<span class="text-neutral-500 dark:text-neutral-400">Jamais vue</span>'
       return `<li class="flex items-center justify-between gap-2 py-2"><span>${h(p.nom)}</span>${etiquette}</li>`
     })
     .join('')
@@ -27,10 +27,10 @@ export function ficheHtml(c: Compte): string {
   return `
   <div class="flex items-start justify-between gap-3">
     <div>
-      <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">${nomFamille(f)}</p>
+      <p class="text-sm font-semibold text-neutral-600 dark:text-neutral-300">${nomFamille(f)}</p>
       <h2 class="text-2xl font-bold leading-tight">${h(c.nom)}</h2>
     </div>
-    <button type="button" data-action="fermer" aria-label="Fermer" class="-mr-2 -mt-1 rounded-full p-2 text-2xl leading-none text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">×</button>
+    <button type="button" data-action="fermer" aria-label="Fermer" class="-mr-2 -mt-1 rounded-full p-2 text-2xl leading-none text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800">×</button>
   </div>
 
   <div class="mt-4">${miniCarPpp(f.id)}</div>
@@ -57,11 +57,11 @@ export function ficheHtml(c: Compte): string {
     }
     <details class="${repliable}">
       <summary class="${resumeRepliable}">Tes cartes pour ce compte ${chevron}</summary>
-      <ul class="divide-y divide-slate-200 px-4 pb-2 text-[15px] dark:divide-slate-700">${progression}</ul>
+      <ul class="divide-y divide-neutral-200 px-4 pb-2 text-[15px] dark:divide-neutral-700">${progression}</ul>
     </details>
   </div>
 
-  <a href="#reviser/compte/${h(c.id)}" class="mt-5 block rounded-xl bg-slate-900 px-4 py-3 text-center font-semibold text-white hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">Réviser ce compte</a>
+  <a href="#reviser/compte/${h(c.id)}" class="mt-5 block rounded-xl bg-boost px-4 py-3 text-center font-semibold text-neutral-950 hover:bg-boost-fonce">Réviser ce compte</a>
   `
 }
 

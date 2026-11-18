@@ -24,24 +24,24 @@ export function comptesHtml(): string {
             .map(c => {
               const recherche = sansAccents(`${c.nom} ${cat.nom} ${f.nom} ${etatParId[f.etat].nom}`)
               return `<li data-recherche="${h(recherche)}">
-                <button type="button" data-action="fiche" data-id="${h(c.id)}" class="flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-800/60">
+                <button type="button" data-action="fiche" data-id="${h(c.id)}" class="flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800/60">
                   <span>${h(c.nom)}</span>
                   <span class="flex shrink-0 items-center gap-1">${paquets.map(p => pointNote(`${p.id}:${c.id}`)).join('')}</span>
                 </button>
               </li>`
             })
             .join('')
-          const titre = parCategorie.size > 1 || cat.nom !== f.nom ? `<p class="px-4 pt-3 text-sm text-slate-500 dark:text-slate-400">${h(cat.nom)}</p>` : ''
+          const titre = parCategorie.size > 1 || cat.nom !== f.nom ? `<p class="px-4 pt-3 text-sm text-neutral-500 dark:text-neutral-400">${h(cat.nom)}</p>` : ''
           return `<div data-sous-groupe>${titre}<ul>${lignes}</ul></div>`
         })
         .join('')
 
-      return `<section data-groupe class="overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-        <a href="#synthese/famille-${f.id}" class="flex items-center gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+      return `<section data-groupe class="overflow-hidden rounded-2xl bg-white ring-1 ring-neutral-200 dark:bg-neutral-900 dark:ring-neutral-800">
+        <a href="#synthese/famille-${f.id}" class="flex items-center gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
           <span class="flex size-8 shrink-0 items-center justify-center rounded-lg text-sm font-black ${couleurFamille[f.id].puce}">${h(f.lettre)}</span>
           <span class="min-w-0 flex-1">
             <span class="block font-semibold">${nomFamille(f)}</span>
-            <span class="block text-sm text-slate-500 dark:text-slate-400">${h(soldeParId[f.solde].nom)} · ${h(etatParId[f.etat].nom)}</span>
+            <span class="block text-sm text-neutral-500 dark:text-neutral-400">${h(soldeParId[f.solde].nom)} · ${h(etatParId[f.etat].nom)}</span>
           </span>
         </a>
         ${sousGroupes}
@@ -52,33 +52,33 @@ export function comptesHtml(): string {
   return `<div class="mx-auto max-w-2xl space-y-6 px-4 py-6 sm:py-10">
     <div>
       <h1 class="text-2xl font-bold">Comptes</h1>
-      <p class="mt-2 text-[17px] leading-relaxed text-slate-600 dark:text-slate-300">Touche un compte pour voir sa fiche.</p>
+      <p class="mt-2 text-[17px] leading-relaxed text-neutral-600 dark:text-neutral-300">Touche un compte pour voir sa fiche.</p>
     </div>
 
     <input type="search" data-recherche-input placeholder="Chercher un compte" autocomplete="off"
-      class="w-full rounded-xl bg-white px-4 py-3 text-base ring-1 ring-slate-300 outline-none focus:ring-2 focus:ring-slate-900 dark:bg-slate-900 dark:ring-slate-700 dark:focus:ring-white">
+      class="w-full rounded-xl bg-white px-4 py-3 text-base ring-1 ring-neutral-300 outline-none focus:ring-2 focus:ring-boost dark:bg-neutral-900 dark:ring-neutral-700">
 
-    <p class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+    <p class="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
       <span class="flex items-center gap-1">${pointNote('')}${pointNote('')}${pointNote('')}</span>
       Tes notes pour ${paquets.map(p => h(p.nom.toLowerCase().replace('?', ''))).join(', ')}
     </p>
 
     <div class="space-y-4">${groupes}</div>
-    <p data-aucun class="hidden text-center text-slate-500">Aucun compte trouvé.</p>
+    <p data-aucun class="hidden text-center text-neutral-500">Aucun compte trouvé.</p>
 
-    <section id="progression" class="space-y-4 rounded-2xl bg-white p-4 ring-1 ring-slate-200 sm:p-5 dark:bg-slate-900 dark:ring-slate-800">
+    <section id="progression" class="space-y-4 rounded-2xl bg-white p-4 ring-1 ring-neutral-200 sm:p-5 dark:bg-neutral-900 dark:ring-neutral-800">
       <h2 class="text-lg font-bold">Ta progression</h2>
       <p class="text-[17px]"><strong class="tabular-nums">${vues}</strong> carte${vues > 1 ? 's' : ''} vue${vues > 1 ? 's' : ''} sur ${cartes.length}</p>
       <ul class="flex flex-wrap gap-x-4 gap-y-1 text-[15px]">${parNote
         .map(n => `<li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full ${couleurNote[n.id].point}"></span>${h(noteNom[n.id])} <strong class="tabular-nums">${n.total}</strong></li>`)
         .join('')}</ul>
       <details class="group">
-        <summary class="cursor-pointer text-[15px] font-semibold text-slate-600 dark:text-slate-300">Sauvegarde</summary>
+        <summary class="cursor-pointer text-[15px] font-semibold text-neutral-600 dark:text-neutral-300">Sauvegarde</summary>
         <div class="mt-3 space-y-3">
-          <p class="text-[15px] leading-relaxed text-slate-600 dark:text-slate-300">La progression reste dans ce navigateur. Sur iPhone, Safari peut l’effacer après une semaine sans visite. Pour l’éviter, ajoute le site à l’écran d’accueil (Partager, puis « Sur l’écran d’accueil »), ou télécharge une sauvegarde de temps en temps.</p>
+          <p class="text-[15px] leading-relaxed text-neutral-600 dark:text-neutral-300">La progression reste dans ce navigateur. Sur iPhone, Safari peut l’effacer après une semaine sans visite. Pour l’éviter, ajoute le site à l’écran d’accueil (Partager, puis « Sur l’écran d’accueil »), ou télécharge une sauvegarde de temps en temps.</p>
           <div class="flex flex-wrap gap-2">
-            <button type="button" data-action="exporter" class="rounded-xl bg-slate-900 px-4 py-2.5 font-semibold text-white hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">Télécharger</button>
-            <label class="cursor-pointer rounded-xl bg-slate-100 px-4 py-2.5 font-semibold hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700">
+            <button type="button" data-action="exporter" class="rounded-xl bg-boost px-4 py-2.5 font-semibold text-neutral-950 hover:bg-boost-fonce">Télécharger</button>
+            <label class="cursor-pointer rounded-xl bg-neutral-100 px-4 py-2.5 font-semibold hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700">
               Importer
               <input type="file" accept="application/json,.json" data-importer class="sr-only">
             </label>

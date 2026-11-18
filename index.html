@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#020617" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Compta" />
@@ -15,14 +15,14 @@
     <link rel="manifest" href="./manifest.webmanifest" />
     <title>Compta</title>
   </head>
-  <body class="min-h-dvh bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
-    <header class="sticky top-0 z-30 border-b border-slate-200 bg-slate-50/85 pt-[env(safe-area-inset-top)] backdrop-blur dark:border-slate-800 dark:bg-slate-950/85">
+  <body class="min-h-dvh bg-neutral-50 text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100">
+    <header class="sticky top-0 z-30 border-b border-neutral-200 bg-neutral-50/85 pt-[env(safe-area-inset-top)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/85">
       <div class="mx-auto flex h-14 max-w-5xl items-center gap-3 px-4">
         <a href="#reviser" class="flex items-center gap-2 font-bold">
           <img src="./apple-touch-icon.png" alt="" class="size-7 rounded-md" />
           <span class="hidden min-[400px]:inline">Compta</span>
         </a>
-        <nav class="ml-auto flex rounded-xl bg-slate-200/70 p-1 text-sm font-semibold dark:bg-slate-800">
+        <nav class="ml-auto flex rounded-xl bg-neutral-200/70 p-1 text-sm font-semibold dark:bg-neutral-800">
           <a data-onglet="reviser" href="#reviser" class="onglet">Réviser</a>
           <a data-onglet="synthese" href="#synthese" class="onglet">Synthèse</a>
           <a data-onglet="comptes" href="#comptes" class="onglet">Comptes</a>
@@ -33,13 +33,13 @@
     <main id="main"></main>
 
     <div id="fiche" class="fixed inset-0 z-40 hidden">
-      <div data-fond class="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px]"></div>
+      <div data-fond class="absolute inset-0 bg-neutral-950/50 backdrop-blur-[2px]"></div>
       <div class="pointer-events-none absolute inset-0 flex items-end justify-center sm:items-center sm:p-6">
         <div
           data-panneau
           role="dialog"
           aria-modal="true"
-          class="pointer-events-auto max-h-[88dvh] w-full max-w-2xl overflow-y-auto overscroll-contain rounded-t-3xl bg-white p-5 pb-[max(env(safe-area-inset-bottom),1.25rem)] shadow-2xl sm:rounded-3xl sm:p-6 dark:bg-slate-900"
+          class="pointer-events-auto max-h-[88dvh] w-full max-w-2xl overflow-y-auto overscroll-contain rounded-t-3xl bg-white p-5 pb-[max(env(safe-area-inset-bottom),1.25rem)] shadow-2xl sm:rounded-3xl sm:p-6 dark:bg-neutral-900"
         ></div>
       </div>
     </div>

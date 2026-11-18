@@ -183,8 +183,8 @@ export function clavier(e: KeyboardEvent): boolean {
 
 const boutonBase = 'rounded-xl py-3 font-semibold transition active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100'
 const bouton = `${boutonBase} px-4`
-const boutonSecondaire = `${bouton} bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700`
-const boutonPrincipal = `${bouton} bg-slate-900 text-white hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200`
+const boutonSecondaire = `${bouton} bg-neutral-100 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700`
+const boutonPrincipal = `${bouton} bg-boost text-neutral-950 hover:bg-boost-fonce`
 // Les boutons de la barre du bas ne rapetissent pas au toucher: sur iPhone, une barre fixe
 // dont le contenu change pendant cette animation peut ne pas redessiner le texte.
 const boutonBarre = 'rounded-xl py-3 font-semibold transition-colors'
@@ -197,7 +197,7 @@ export function reviserHtml(): string {
 
 function puceBascule(actif: boolean, action: string, valeur: string, contenu: string): string {
   return `<button type="button" data-action="${action}" data-valeur="${h(valeur)}" aria-pressed="${actif}"
-    class="${puceBase} px-3 py-1.5 ${actif ? 'bg-slate-900 text-white ring-slate-900 dark:bg-white dark:text-slate-900 dark:ring-white' : 'bg-white text-slate-500 ring-slate-300 dark:bg-slate-900 dark:text-slate-400 dark:ring-slate-700'}">${contenu}</button>`
+    class="${puceBase} px-3 py-1.5 ${actif ? 'bg-boost text-neutral-950 ring-boost' : 'bg-white text-neutral-500 ring-neutral-300 dark:bg-neutral-900 dark:text-neutral-400 dark:ring-neutral-700'}">${contenu}</button>`
 }
 
 function reglagesHtml(): string {
@@ -212,7 +212,7 @@ function reglagesHtml(): string {
   const reprendre =
     session && enCours()
       ? `<button type="button" data-action="reprendre" class="flex w-full items-center justify-between gap-3 rounded-2xl bg-amber-50 p-4 text-left ring-1 ring-amber-200 hover:bg-amber-100 dark:bg-amber-950/40 dark:ring-amber-900 dark:hover:bg-amber-950/70">
-          <span><span class="block font-semibold">Reprendre où tu étais</span><span class="block text-sm text-slate-600 dark:text-slate-300">Carte ${session.pos + 1} sur ${session.passages.length}</span></span>
+          <span><span class="block font-semibold">Reprendre où tu étais</span><span class="block text-sm text-neutral-600 dark:text-neutral-300">Carte ${session.pos + 1} sur ${session.passages.length}</span></span>
           <span aria-hidden="true" class="text-xl">›</span>
         </button>`
       : ''
@@ -221,13 +221,13 @@ function reglagesHtml(): string {
     .map(p => {
       const actif = config.paquets.includes(p.id)
       return `<button type="button" data-action="reglage-paquet" data-valeur="${p.id}" aria-pressed="${actif}"
-        class="flex w-full items-center gap-4 rounded-2xl p-4 text-left transition ${actif ? 'bg-white ring-2 ring-slate-900 dark:bg-slate-900 dark:ring-white' : 'bg-white/60 ring-1 ring-slate-200 dark:bg-slate-900/50 dark:ring-slate-800'}">
-        <span class="flex size-6 shrink-0 items-center justify-center rounded-full text-sm ${actif ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'ring-2 ring-slate-300 dark:ring-slate-600'}">${actif ? '✓' : ''}</span>
+        class="flex w-full items-center gap-4 rounded-2xl p-4 text-left transition ${actif ? 'bg-white ring-2 ring-boost dark:bg-neutral-900' : 'bg-white/60 ring-1 ring-neutral-200 dark:bg-neutral-900/50 dark:ring-neutral-800'}">
+        <span class="flex size-6 shrink-0 items-center justify-center rounded-full text-sm ${actif ? 'bg-boost text-neutral-950' : 'ring-2 ring-neutral-300 dark:ring-neutral-600'}">${actif ? '✓' : ''}</span>
         <span class="min-w-0 flex-1">
           <span class="block font-semibold">${h(p.nom)}</span>
-          <span class="block text-sm text-slate-600 dark:text-slate-400">${h(p.question)}</span>
+          <span class="block text-sm text-neutral-600 dark:text-neutral-400">${h(p.question)}</span>
         </span>
-        <span class="text-sm tabular-nums text-slate-500 dark:text-slate-400">${nbParPaquet(p.id)}</span>
+        <span class="text-sm tabular-nums text-neutral-500 dark:text-neutral-400">${nbParPaquet(p.id)}</span>
       </button>`
     })
     .join('')
@@ -236,7 +236,7 @@ function reglagesHtml(): string {
     ${reprendre}
     <div>
       <h1 class="text-2xl font-bold">Réviser</h1>
-      <p class="mt-2 text-[17px] leading-relaxed text-slate-600 dark:text-slate-300">Choisis un paquet, ou plusieurs.</p>
+      <p class="mt-2 text-[17px] leading-relaxed text-neutral-600 dark:text-neutral-300">Choisis un paquet, ou plusieurs.</p>
     </div>
 
     <div class="space-y-3">${paquetsHtml}</div>
@@ -245,17 +245,17 @@ function reglagesHtml(): string {
       <button type="button" data-action="demarrer" ${total === 0 ? 'disabled' : ''} class="${boutonPrincipal} w-full text-lg">
         ${total === 0 ? 'Aucune carte avec ces choix' : `Commencer · ${total} carte${total > 1 ? 's' : ''}`}
       </button>
-      ${repetees ? `<p class="text-center text-sm text-slate-500 dark:text-slate-400">${repetees} carte${repetees > 1 ? 's' : ''} difficile${repetees > 1 ? 's' : ''} reviendr${repetees > 1 ? 'ont' : 'a'} une deuxième fois.</p>` : ''}
+      ${repetees ? `<p class="text-center text-sm text-neutral-500 dark:text-neutral-400">${repetees} carte${repetees > 1 ? 's' : ''} difficile${repetees > 1 ? 's' : ''} reviendr${repetees > 1 ? 'ont' : 'a'} une deuxième fois.</p>` : ''}
       ${difficiles ? `<button type="button" data-action="demarrer-difficiles" class="${boutonSecondaire} w-full">Revoir seulement les difficiles · ${difficiles}</button>` : ''}
     </div>
 
     <details class="group">
-      <summary class="flex cursor-pointer list-none items-center gap-2 text-[15px] font-semibold text-slate-600 dark:text-slate-300 [&::-webkit-details-marker]:hidden">
+      <summary class="flex cursor-pointer list-none items-center gap-2 text-[15px] font-semibold text-neutral-600 dark:text-neutral-300 [&::-webkit-details-marker]:hidden">
         <span aria-hidden="true" class="transition group-open:rotate-90">›</span> Plus d’options
       </summary>
       <div class="mt-4 space-y-6">
         <fieldset class="space-y-2">
-          <legend class="text-sm font-semibold text-slate-600 dark:text-slate-300">Selon ta dernière note</legend>
+          <legend class="text-sm font-semibold text-neutral-600 dark:text-neutral-300">Selon ta dernière note</legend>
           <div class="flex flex-wrap gap-2">${filtres
             .map(f =>
               puceBascule(
@@ -269,7 +269,7 @@ function reglagesHtml(): string {
         </fieldset>
 
         <fieldset class="space-y-2">
-          <legend class="flex w-full items-center justify-between text-sm font-semibold text-slate-600 dark:text-slate-300">
+          <legend class="flex w-full items-center justify-between text-sm font-semibold text-neutral-600 dark:text-neutral-300">
             <span>Familles</span>
             <button type="button" data-action="reglage-tout-familles" class="font-normal underline underline-offset-4">${config.familles.length === familles.length ? 'Aucune' : 'Toutes'}</button>
           </legend>
@@ -286,14 +286,14 @@ function reglagesHtml(): string {
         </fieldset>
 
         <label class="flex items-start gap-3 text-[15px]">
-          <input type="checkbox" data-action="reglage-ponderer" ${config.ponderer ? 'checked' : ''} class="mt-0.5 size-5 shrink-0 accent-slate-900 dark:accent-white">
+          <input type="checkbox" data-action="reglage-ponderer" ${config.ponderer ? 'checked' : ''} class="mt-0.5 size-5 shrink-0 accent-boost">
           <span>Montrer plus souvent les cartes difficiles
-            <span class="block text-sm text-slate-500 dark:text-slate-400">Les cartes À revoir et Difficile reviennent une deuxième fois, et les faciles passent à la fin. Toutes les cartes sortent quand même au moins une fois.</span>
+            <span class="block text-sm text-neutral-500 dark:text-neutral-400">Les cartes À revoir et Difficile reviennent une deuxième fois, et les faciles passent à la fin. Toutes les cartes sortent quand même au moins une fois.</span>
           </span>
         </label>
 
         <label class="flex items-center gap-3 text-[15px]">
-          <input type="checkbox" data-action="reglage-melanger" ${config.melanger ? 'checked' : ''} class="size-5 shrink-0 accent-slate-900 dark:accent-white">
+          <input type="checkbox" data-action="reglage-melanger" ${config.melanger ? 'checked' : ''} class="size-5 shrink-0 accent-boost">
           Mélanger les cartes
         </label>
       </div>
@@ -316,8 +316,8 @@ function carteHtml(s: Session): string {
     .filter(o => !p.revele || o.id === bonne || o.id === p.choix)
     .map(o => {
       const i = paquet.options.indexOf(o)
-      let style = 'bg-white ring-slate-300 hover:bg-slate-50 dark:bg-slate-900 dark:ring-slate-700 dark:hover:bg-slate-800'
-      let marque = `<span class="hidden text-xs text-slate-400 sm:inline">${i + 1}</span>`
+      let style = 'bg-white ring-neutral-300 hover:bg-neutral-50 dark:bg-neutral-900 dark:ring-neutral-700 dark:hover:bg-neutral-800'
+      let marque = `<span class="hidden text-xs text-neutral-400 sm:inline">${i + 1}</span>`
       if (p.revele) {
         if (o.id === bonne) {
           style = 'bg-green-50 ring-green-600 ring-2 text-green-900 dark:bg-green-950/60 dark:text-green-100 dark:ring-green-500'
@@ -347,17 +347,17 @@ function carteHtml(s: Session): string {
     ? `<div class="mt-4 space-y-2.5 sm:mt-6 sm:space-y-4">
         ${verdict}
         ${resume(compte, paquet.id)}
-        <p class="leading-normal text-slate-700 sm:text-[17px] sm:leading-relaxed dark:text-slate-200">${h(compte.note ?? categorieParId[compte.categorie].description)}</p>
+        <p class="leading-normal text-neutral-700 sm:text-[17px] sm:leading-relaxed dark:text-neutral-200">${h(compte.note ?? categorieParId[compte.categorie].description)}</p>
         <button type="button" data-action="fiche" data-id="${h(compte.id)}" class="text-[15px] font-semibold underline underline-offset-4">Voir la fiche du compte</button>
       </div>`
     : ''
 
   const actions = !p.revele
-    ? `<button type="button" data-action="reveler" class="${boutonBarre} w-full bg-slate-100 px-4 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">Afficher la réponse</button>`
+    ? `<button type="button" data-action="reveler" class="${boutonBarre} w-full bg-neutral-100 px-4 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700">Afficher la réponse</button>`
     : `<div class="grid grid-cols-4 gap-2">${notes
         .map(
           n => `<button type="button" data-action="noter" data-valeur="${n.id}"
-            class="${boutonBarre} whitespace-nowrap px-1 text-[15px] ${couleurNote[n.id].bouton} ${p.note && p.note !== n.id ? 'opacity-50' : ''} ${p.note === n.id ? 'ring-4 ring-offset-2 ring-slate-400 ring-offset-white dark:ring-offset-slate-950' : ''}">
+            class="${boutonBarre} whitespace-nowrap px-1 text-[15px] ${couleurNote[n.id].bouton} ${p.note && p.note !== n.id ? 'opacity-50' : ''} ${p.note === n.id ? 'ring-4 ring-offset-2 ring-neutral-400 ring-offset-white dark:ring-offset-neutral-950' : ''}">
             ${h(n.nom)}<span class="hidden text-xs font-normal opacity-80 sm:block">${n.touche}</span>
           </button>`,
         )
@@ -365,27 +365,27 @@ function carteHtml(s: Session): string {
 
   return `<div class="mx-auto max-w-xl px-4 pt-3 pb-[calc(5.5rem+env(safe-area-inset-bottom))] sm:pt-8 sm:pb-8">
     <div class="flex items-center justify-between gap-2 text-sm">
-      <button type="button" data-action="precedent" ${s.pos === 0 ? 'disabled' : ''} class="rounded-lg px-2 py-1.5 font-semibold hover:bg-slate-100 disabled:opacity-30 dark:hover:bg-slate-800">← Précédente</button>
-      <span class="tabular-nums text-slate-500 dark:text-slate-400">${s.pos + 1} / ${s.passages.length}</span>
+      <button type="button" data-action="precedent" ${s.pos === 0 ? 'disabled' : ''} class="rounded-lg px-2 py-1.5 font-semibold hover:bg-neutral-100 disabled:opacity-30 dark:hover:bg-neutral-800">← Précédente</button>
+      <span class="tabular-nums text-neutral-500 dark:text-neutral-400">${s.pos + 1} / ${s.passages.length}</span>
       ${
         p.note
-          ? `<button type="button" data-action="suivant" class="rounded-lg px-2 py-1.5 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800">Suivante →</button>`
-          : `<button type="button" data-action="terminer" class="rounded-lg px-2 py-1.5 font-semibold text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800">Terminer</button>`
+          ? `<button type="button" data-action="suivant" class="rounded-lg px-2 py-1.5 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800">Suivante →</button>`
+          : `<button type="button" data-action="terminer" class="rounded-lg px-2 py-1.5 font-semibold text-neutral-500 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800">Terminer</button>`
       }
     </div>
-    <div class="mt-1 h-1 overflow-hidden sm:mt-2 rounded-full bg-slate-200 dark:bg-slate-800">
-      <div class="h-full rounded-full bg-slate-900 transition-all dark:bg-white" style="width:${progression}%"></div>
+    <div class="mt-1 h-1 overflow-hidden sm:mt-2 rounded-full bg-neutral-200 dark:bg-neutral-800">
+      <div class="h-full rounded-full bg-boost transition-all" style="width:${progression}%"></div>
     </div>
 
-    <article class="mt-3 rounded-2xl border-t-4 ${couleurFamille[f.id].bord} bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:mt-5 sm:p-6 dark:bg-slate-900 dark:ring-slate-800">
-      <p class="text-sm text-slate-500 dark:text-slate-400">${h(paquet.nom)}</p>
+    <article class="mt-3 rounded-2xl border-t-4 ${couleurFamille[f.id].bord} bg-white p-4 shadow-sm ring-1 ring-neutral-200 sm:mt-5 sm:p-6 dark:bg-neutral-900 dark:ring-neutral-800">
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">${h(paquet.nom)}</p>
       <h2 class="mt-1 text-2xl font-bold leading-tight sm:text-3xl">${h(compte.nom)}</h2>
-      <p class="mt-1 text-slate-600 sm:mt-2 sm:text-[17px] dark:text-slate-300">${h(paquet.question)}</p>
+      <p class="mt-1 text-neutral-600 sm:mt-2 sm:text-[17px] dark:text-neutral-300">${h(paquet.question)}</p>
       <div class="mt-4 sm:mt-5 ${deuxColonnes ? 'grid grid-cols-2 gap-2' : 'space-y-2'}">${options}</div>
       ${verso}
     </article>
 
-    <div class="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white px-4 pt-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:static sm:mt-4 sm:border-0 sm:bg-transparent sm:p-0 dark:border-slate-800 dark:bg-slate-950 sm:dark:bg-transparent">
+    <div class="fixed inset-x-0 bottom-0 z-20 border-t border-neutral-200 bg-white px-4 pt-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:static sm:mt-4 sm:border-0 sm:bg-transparent sm:p-0 dark:border-neutral-800 dark:bg-neutral-950 sm:dark:bg-transparent">
       <div class="mx-auto max-w-xl">${actions}</div>
     </div>
   </div>`
@@ -410,11 +410,11 @@ function finHtml(s: Session): string {
   return `<div class="mx-auto max-w-xl space-y-6 px-4 py-6 sm:py-8">
     <div>
       <h1 class="text-2xl font-bold">Session terminée</h1>
-      <p class="mt-1 text-[15px] text-slate-600 dark:text-slate-300">${derniere.size} carte${derniere.size > 1 ? 's' : ''} révisée${derniere.size > 1 ? 's' : ''}.</p>
+      <p class="mt-1 text-[15px] text-neutral-600 dark:text-neutral-300">${derniere.size} carte${derniere.size > 1 ? 's' : ''} révisée${derniere.size > 1 ? 's' : ''}.</p>
     </div>
     <dl class="grid grid-cols-4 gap-2 text-center">${notes
       .map(
-        n => `<div class="rounded-xl bg-white p-3 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+        n => `<div class="rounded-xl bg-white p-3 ring-1 ring-neutral-200 dark:bg-neutral-900 dark:ring-neutral-800">
           <dt class="whitespace-nowrap text-xs font-semibold ${couleurNote[n.id].texte}">${h(noteNom[n.id])}</dt>
           <dd class="text-2xl font-bold tabular-nums">${compte(n.id)}</dd>
         </div>`,
@@ -424,15 +424,15 @@ function finHtml(s: Session): string {
     ${
       aRevoir.length
         ? `<div class="space-y-2">
-            <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">À retravailler</h2>
+            <h2 class="text-sm font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">À retravailler</h2>
             <div class="flex flex-wrap gap-2">${[...parFamille.entries()]
               .map(([fam, n]) => `<a href="#synthese/famille-${fam}" class="${puceBase} ${couleurFamille[fam].puce}">${h(familleParId[fam].nom)} · ${n}</a>`)
               .join('')}</div>
-            <ul class="divide-y divide-slate-200 rounded-xl bg-white text-[15px] ring-1 ring-slate-200 dark:divide-slate-800 dark:bg-slate-900 dark:ring-slate-800">${aRevoir
+            <ul class="divide-y divide-neutral-200 rounded-xl bg-white text-[15px] ring-1 ring-neutral-200 dark:divide-neutral-800 dark:bg-neutral-900 dark:ring-neutral-800">${aRevoir
               .map(
-                c => `<li><button type="button" data-action="fiche" data-id="${h(c.compte.id)}" class="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-800">
+                c => `<li><button type="button" data-action="fiche" data-id="${h(c.compte.id)}" class="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800">
                   <span class="font-medium">${h(c.compte.nom)}</span>
-                  <span class="text-sm text-slate-500 dark:text-slate-400">${h(paquetParId[c.paquet.id].nom)}</span>
+                  <span class="text-sm text-neutral-500 dark:text-neutral-400">${h(paquetParId[c.paquet.id].nom)}</span>
                 </button></li>`,
               )
               .join('')}</ul>

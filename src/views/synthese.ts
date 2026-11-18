@@ -24,22 +24,22 @@ interface Chapitre {
 }
 
 const lead = 'text-[17px] leading-relaxed'
-const doux = 'text-slate-600 dark:text-slate-300'
-const boite = 'rounded-2xl bg-white ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800'
+const doux = 'text-neutral-600 dark:text-neutral-300'
+const boite = 'rounded-2xl bg-white ring-1 ring-neutral-200 dark:bg-neutral-900 dark:ring-neutral-800'
 
 export function ecritureHtml(e: Ecriture, focus?: string): string {
   const d = compteParId[e.debit.compte]
   const c = compteParId[e.credit.compte]
   const ligne = (compte: typeof d, m: number, cote: 'debit' | 'credit') => `
     <tr>
-      <td class="py-1.5 ${cote === 'credit' ? 'pl-6' : ''}">${puceCompte(compte, focus === compte.id ? 'ring-2 ring-slate-900 dark:ring-white' : '')}</td>
+      <td class="py-1.5 ${cote === 'credit' ? 'pl-6' : ''}">${puceCompte(compte, focus === compte.id ? 'ring-2 ring-boost' : '')}</td>
       <td class="w-20 py-1.5 text-right tabular-nums">${cote === 'debit' ? montant(m) : ''}</td>
       <td class="w-20 py-1.5 text-right tabular-nums">${cote === 'credit' ? montant(m) : ''}</td>
     </tr>`
   return `<figure>
     <figcaption class="${lead} font-medium">${h(e.titre)}</figcaption>
     <table class="mt-3 w-full text-sm">
-      <thead class="text-xs text-slate-500 dark:text-slate-400">
+      <thead class="text-xs text-neutral-500 dark:text-neutral-400">
         <tr><th class="text-left font-medium">Compte</th><th class="text-right font-medium">Débit</th><th class="text-right font-medium">Crédit</th></tr>
       </thead>
       <tbody>${ligne(d, e.debit.montant, 'debit')}${ligne(c, e.credit.montant, 'credit')}</tbody>
@@ -60,14 +60,14 @@ function schema(): string {
       <p class="mt-3 text-sm ${doux}">${role}</p>
       <p class="mt-1 font-semibold">${regle}</p>
     </div>`
-  return `<div class="grid grid-cols-2 overflow-hidden rounded-2xl text-center ring-1 ring-slate-200 dark:ring-slate-800">
-    ${colonne(['charges', 'actifs', 'retraits'], 'debiteur', 'bg-indigo-50 dark:bg-indigo-950/50', 'Où la valeur va', 'Débit ↑ Crédit ↓')}
-    ${colonne(['passifs', 'capitaux', 'produits'], 'crediteur', 'border-l border-slate-200 bg-orange-50 dark:border-slate-800 dark:bg-orange-950/40', 'D’où la valeur vient', 'Débit ↓ Crédit ↑')}
+  return `<div class="grid grid-cols-2 overflow-hidden rounded-2xl text-center ring-1 ring-neutral-200 dark:ring-neutral-800">
+    ${colonne(['charges', 'actifs', 'retraits'], 'debiteur', 'bg-teal-50 dark:bg-teal-500/15', 'Où la valeur va', 'Débit ↑ Crédit ↓')}
+    ${colonne(['passifs', 'capitaux', 'produits'], 'crediteur', 'border-l border-neutral-200 bg-orange-50 dark:border-neutral-800 dark:bg-orange-500/15', 'D’où la valeur vient', 'Débit ↓ Crédit ↑')}
   </div>`
 }
 
 const resumeRepliable = 'flex cursor-pointer list-none items-center gap-3 p-4 [&::-webkit-details-marker]:hidden'
-const chevron = '<span aria-hidden="true" class="text-xl text-slate-400 transition group-open:rotate-90">›</span>'
+const chevron = '<span aria-hidden="true" class="text-xl text-neutral-400 transition group-open:rotate-90">›</span>'
 
 function familleRepliable(f: Famille): string {
   const membres = comptes.filter(c => familleDe(c).id === f.id)
@@ -94,7 +94,7 @@ function familleRepliable(f: Famille): string {
       </span>
       ${chevron}
     </summary>
-    <div class="space-y-5 border-t border-slate-200 p-4 dark:border-slate-800">
+    <div class="space-y-5 border-t border-neutral-200 p-4 dark:border-neutral-800">
       <p class="${lead}">${h(f.description)}</p>
       ${f.id === 'retraits' ? `<p class="text-[15px] ${doux}">Classé dans la catégorie Capitaux propres, mais il les diminue. C’est pour ça qu’il est du côté débit.</p>` : ''}
       ${groupes}
@@ -116,9 +116,9 @@ const chapitres: Chapitre[] = [
     sousTitre: 'Deux côtés, gauche et droite',
     contenu: () => `
       <p class="${lead}">Chaque transaction touche au moins deux comptes. On inscrit un montant au <strong>débit</strong> d’un compte et le même montant au <strong>crédit</strong> d’un autre.</p>
-      <div class="grid grid-cols-2 overflow-hidden rounded-2xl text-center ring-1 ring-slate-200 dark:ring-slate-800">
-        <div class="bg-indigo-50 p-5 dark:bg-indigo-950/50"><p class="text-2xl font-bold">Débit</p><p class="${doux}">à gauche</p></div>
-        <div class="border-l border-slate-200 bg-orange-50 p-5 dark:border-slate-800 dark:bg-orange-950/40"><p class="text-2xl font-bold">Crédit</p><p class="${doux}">à droite</p></div>
+      <div class="grid grid-cols-2 overflow-hidden rounded-2xl text-center ring-1 ring-neutral-200 dark:ring-neutral-800">
+        <div class="bg-teal-50 p-5 dark:bg-teal-500/15"><p class="text-2xl font-bold">Débit</p><p class="${doux}">à gauche</p></div>
+        <div class="border-l border-neutral-200 bg-orange-50 p-5 dark:border-neutral-800 dark:bg-orange-500/15"><p class="text-2xl font-bold">Crédit</p><p class="${doux}">à droite</p></div>
       </div>
       <ul class="list-disc space-y-3 pl-5 ${lead}">
         <li>Ce ne sont que des côtés. Rien de plus.</li>
@@ -127,7 +127,7 @@ const chapitres: Chapitre[] = [
       </ul>
       <details id="banque" class="group scroll-mt-20 ${boite}">
         <summary class="${resumeRepliable}"><span class="flex-1 font-semibold">Pourquoi la banque dit le contraire?</span>${chevron}</summary>
-        <div class="space-y-3 border-t border-slate-200 p-4 text-[15px] leading-relaxed dark:border-slate-800">
+        <div class="space-y-3 border-t border-neutral-200 p-4 text-[15px] leading-relaxed dark:border-neutral-800">
           <p>Pour la banque, ton compte-chèque est de l’argent qu’elle te doit. C’est un <strong>passif</strong> pour elle, alors quand il augmente, elle le <strong>crédite</strong>.</p>
           <p>Pour toi, ce même argent est un <strong>actif</strong> (${puceCompte(compteParId.encaisse)}). Quand il augmente, tu le <strong>débites</strong>.</p>
         </div>
@@ -166,9 +166,9 @@ const chapitres: Chapitre[] = [
       <p class="${lead}">Le compte débité est inscrit en premier. Le compte crédité est décalé vers la droite.</p>
       <div class="${boite} p-4 sm:p-5">${ecritureHtml(ecritures[exemple])}</div>
       <div class="flex items-center justify-between">
-        <button type="button" data-action="exemple-prec" aria-label="Exemple précédent" class="rounded-xl px-5 py-2.5 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-800">←</button>
+        <button type="button" data-action="exemple-prec" aria-label="Exemple précédent" class="rounded-xl px-5 py-2.5 text-lg font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800">←</button>
         <span class="text-sm tabular-nums ${doux}">Exemple ${exemple + 1} sur ${ecritures.length}</span>
-        <button type="button" data-action="exemple-suiv" aria-label="Exemple suivant" class="rounded-xl px-5 py-2.5 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-800">→</button>
+        <button type="button" data-action="exemple-suiv" aria-label="Exemple suivant" class="rounded-xl px-5 py-2.5 text-lg font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800">→</button>
       </div>`,
   },
   {
@@ -187,17 +187,17 @@ const chapitres: Chapitre[] = [
               : ''
           return `<details id="etat-${e.id}" class="group scroll-mt-20 ${boite}">
               <summary class="${resumeRepliable}">
-                <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-900 font-bold text-white dark:bg-white dark:text-slate-900">${i + 1}</span>
+                <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-boost font-bold text-neutral-950">${i + 1}</span>
                 <span class="min-w-0 flex-1">
                   <span class="block font-semibold">${h(e.nom)}</span>
                   <span class="block text-[15px] ${doux}">${h(e.formule)}</span>
                 </span>
                 ${chevron}
               </summary>
-              <div class="space-y-4 border-t border-slate-200 p-4 dark:border-slate-800">
+              <div class="space-y-4 border-t border-neutral-200 p-4 dark:border-neutral-800">
                 <p class="${lead}">${h(e.description)}</p>
                 <div class="flex flex-wrap gap-2">${fams
-                  .map(f => `<a href="#synthese/famille-${f.id}" class="${puceBase} bg-white ring-slate-200 dark:bg-slate-900 dark:ring-slate-700">${nomFamille(f)}</a>`)
+                  .map(f => `<a href="#synthese/famille-${f.id}" class="${puceBase} bg-white ring-neutral-200 dark:bg-neutral-900 dark:ring-neutral-700">${nomFamille(f)}</a>`)
                   .join('')}</div>
                 <div class="flex flex-wrap gap-2">${membres.map(c => puceCompte(c)).join('')}</div>
               </div>
@@ -212,12 +212,12 @@ const chapitres: Chapitre[] = [
     sousTitre: 'Deviner la catégorie à partir des mots',
     contenu: () => `
       <p class="${lead}">Souvent, le nom du compte donne la réponse.</p>
-      <ul class="divide-y divide-slate-200 ${boite} dark:divide-slate-800">${indices
+      <ul class="divide-y divide-neutral-200 ${boite} dark:divide-neutral-800">${indices
         .map(i => {
           const cat = categorieParId[i.categorie]
           const fam = familleParId[cat.famille]
           return `<li class="p-4">
-            <p class="font-semibold">${h(i.motif)} <span class="text-slate-400">→</span> <a href="#synthese/famille-${fam.id}" class="${couleurFamille[fam.id].texte}">${h(cat.nom)}</a></p>
+            <p class="font-semibold">${h(i.motif)} <span class="text-neutral-400">→</span> <a href="#synthese/famille-${fam.id}" class="${couleurFamille[fam.id].texte}">${h(cat.nom)}</a></p>
             <p class="mt-1 text-[15px] leading-relaxed ${doux}">${h(i.explication)} Par exemple ${i.exemples
               .map(id => `<button type="button" data-action="fiche" data-id="${h(id)}" class="underline underline-offset-2">${h(compteParId[id].nom)}</button>`)
               .join(', ')}.</p>
@@ -247,12 +247,12 @@ function apercuHtml(): string {
       <p class="mt-2 ${lead} ${doux}">Tout tient dans ce schéma. Les chapitres l’expliquent un morceau à la fois.</p>
     </div>
     ${schema()}
-    <ol class="divide-y divide-slate-200 ${boite} dark:divide-slate-800">${chapitres
+    <ol class="divide-y divide-neutral-200 ${boite} dark:divide-neutral-800">${chapitres
       .map(
-        (c, i) => `<li><a href="#synthese/${c.id}" class="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/60">
-          <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-100 font-bold dark:bg-slate-800">${i + 1}</span>
+        (c, i) => `<li><a href="#synthese/${c.id}" class="flex items-center gap-4 p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/60">
+          <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-neutral-100 font-bold dark:bg-neutral-800">${i + 1}</span>
           <span class="min-w-0 flex-1"><span class="block font-semibold">${h(c.titre)}</span><span class="block text-[15px] ${doux}">${h(c.sousTitre)}</span></span>
-          <span aria-hidden="true" class="text-xl text-slate-400">›</span>
+          <span aria-hidden="true" class="text-xl text-neutral-400">›</span>
         </a></li>`,
       )
       .join('')}</ol>
@@ -265,7 +265,7 @@ export function syntheseHtml(chapitreId: string): string {
   const c = chapitres[i]
   const lienNav = (ch: Chapitre | undefined, sens: 'prec' | 'suiv') =>
     ch
-      ? `<a href="#synthese/${ch.id}" class="block ${boite} p-4 hover:bg-slate-50 dark:hover:bg-slate-800/60 ${sens === 'suiv' ? 'col-start-2 text-right' : ''}">
+      ? `<a href="#synthese/${ch.id}" class="block ${boite} p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 ${sens === 'suiv' ? 'col-start-2 text-right' : ''}">
           <span class="block text-sm ${doux}">${sens === 'prec' ? '← Précédent' : 'Suivant →'}</span>
           <span class="block font-semibold">${h(ch.titre)}</span>
         </a>`

@@ -21,56 +21,57 @@ export function h(texte: string | number): string {
     .replace(/"/g, '&quot;')
 }
 
-// Chaque famille garde la même couleur partout dans le site. Les classes sont écrites au
-// complet pour que Tailwind les trouve.
+// Chaque famille garde la même couleur partout dans le site. Les teintes viennent de la palette
+// des commentaires de Boost for Reddit. Les classes sont écrites au complet pour que Tailwind les
+// trouve.
 export const couleurFamille: Record<FamilleId, { puce: string; bord: string; texte: string; fond: string; point: string }> = {
   charges: {
-    puce: 'bg-rose-100 text-rose-900 ring-rose-300 dark:bg-rose-950 dark:text-rose-200 dark:ring-rose-800',
-    bord: 'border-rose-400 dark:border-rose-700',
-    texte: 'text-rose-700 dark:text-rose-300',
-    fond: 'bg-rose-50 dark:bg-rose-950/40',
-    point: 'bg-rose-500',
+    puce: 'bg-pink-100 text-pink-900 ring-pink-400 dark:bg-pink-500/20 dark:text-pink-200 dark:ring-pink-400/60',
+    bord: 'border-pink-500 dark:border-pink-400',
+    texte: 'text-pink-600 dark:text-pink-400',
+    fond: 'bg-pink-50 dark:bg-pink-500/15',
+    point: 'bg-pink-500 dark:bg-pink-400',
   },
   actifs: {
-    puce: 'bg-sky-100 text-sky-900 ring-sky-300 dark:bg-sky-950 dark:text-sky-200 dark:ring-sky-800',
-    bord: 'border-sky-400 dark:border-sky-700',
-    texte: 'text-sky-700 dark:text-sky-300',
-    fond: 'bg-sky-50 dark:bg-sky-950/40',
-    point: 'bg-sky-500',
+    puce: 'bg-cyan-100 text-cyan-900 ring-cyan-400 dark:bg-cyan-500/20 dark:text-cyan-200 dark:ring-cyan-400/60',
+    bord: 'border-cyan-500 dark:border-cyan-400',
+    texte: 'text-cyan-600 dark:text-cyan-400',
+    fond: 'bg-cyan-50 dark:bg-cyan-500/15',
+    point: 'bg-cyan-500 dark:bg-cyan-400',
   },
   retraits: {
-    puce: 'bg-violet-100 text-violet-900 ring-violet-300 dark:bg-violet-950 dark:text-violet-200 dark:ring-violet-800',
-    bord: 'border-violet-400 dark:border-violet-700',
-    texte: 'text-violet-700 dark:text-violet-300',
-    fond: 'bg-violet-50 dark:bg-violet-950/40',
-    point: 'bg-violet-500',
+    puce: 'bg-purple-100 text-purple-900 ring-purple-400 dark:bg-purple-500/20 dark:text-purple-200 dark:ring-purple-400/60',
+    bord: 'border-purple-500 dark:border-purple-400',
+    texte: 'text-purple-600 dark:text-purple-400',
+    fond: 'bg-purple-50 dark:bg-purple-500/15',
+    point: 'bg-purple-500 dark:bg-purple-400',
   },
   passifs: {
-    puce: 'bg-amber-100 text-amber-900 ring-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-800',
-    bord: 'border-amber-400 dark:border-amber-700',
-    texte: 'text-amber-700 dark:text-amber-300',
-    fond: 'bg-amber-50 dark:bg-amber-950/40',
-    point: 'bg-amber-500',
+    puce: 'bg-yellow-100 text-yellow-900 ring-yellow-400 dark:bg-yellow-500/20 dark:text-yellow-200 dark:ring-yellow-400/60',
+    bord: 'border-yellow-500 dark:border-yellow-400',
+    texte: 'text-yellow-600 dark:text-yellow-400',
+    fond: 'bg-yellow-50 dark:bg-yellow-500/15',
+    point: 'bg-yellow-500 dark:bg-yellow-400',
   },
   capitaux: {
-    puce: 'bg-emerald-100 text-emerald-900 ring-emerald-300 dark:bg-emerald-950 dark:text-emerald-200 dark:ring-emerald-800',
-    bord: 'border-emerald-400 dark:border-emerald-700',
-    texte: 'text-emerald-700 dark:text-emerald-300',
-    fond: 'bg-emerald-50 dark:bg-emerald-950/40',
-    point: 'bg-emerald-500',
+    puce: 'bg-green-100 text-green-900 ring-green-400 dark:bg-green-500/20 dark:text-green-200 dark:ring-green-400/60',
+    bord: 'border-green-500 dark:border-green-400',
+    texte: 'text-green-600 dark:text-green-400',
+    fond: 'bg-green-50 dark:bg-green-500/15',
+    point: 'bg-green-500 dark:bg-green-400',
   },
   produits: {
-    puce: 'bg-lime-100 text-lime-900 ring-lime-300 dark:bg-lime-950 dark:text-lime-200 dark:ring-lime-800',
-    bord: 'border-lime-500 dark:border-lime-700',
-    texte: 'text-lime-700 dark:text-lime-300',
-    fond: 'bg-lime-50 dark:bg-lime-950/40',
-    point: 'bg-lime-500',
+    puce: 'bg-lime-100 text-lime-900 ring-lime-400 dark:bg-lime-500/20 dark:text-lime-200 dark:ring-lime-400/60',
+    bord: 'border-lime-500 dark:border-lime-400',
+    texte: 'text-lime-600 dark:text-lime-400',
+    fond: 'bg-lime-50 dark:bg-lime-500/15',
+    point: 'bg-lime-500 dark:bg-lime-400',
   },
 }
 
 export const couleurSolde: Record<SoldeId, string> = {
-  debiteur: 'bg-indigo-600 text-white dark:bg-indigo-500',
-  crediteur: 'bg-orange-600 text-white dark:bg-orange-500',
+  debiteur: 'bg-teal-600 text-white',
+  crediteur: 'bg-orange-600 text-white',
 }
 
 export const couleurNote: Record<Note, { bouton: string; point: string; texte: string }> = {
@@ -101,7 +102,7 @@ export const puceBase = 'inline-flex items-center gap-1 rounded-full px-2.5 py-0
 // Pastille neutre avec un point de la couleur de la famille. Plus calme qu'une pastille colorée.
 export function puceCompte(c: Compte, extra = ''): string {
   const f = familleDe(c)
-  return `<button type="button" data-action="fiche" data-id="${h(c.id)}" class="inline-flex items-center gap-2 rounded-2xl bg-white px-3 py-1.5 text-left text-[15px] ring-1 ring-slate-200 hover:bg-slate-50 active:bg-slate-100 dark:bg-slate-900 dark:ring-slate-700 dark:hover:bg-slate-800 ${extra}"><span class="size-2 shrink-0 rounded-full ${couleurFamille[f.id].point}"></span>${h(c.nom)}</button>`
+  return `<button type="button" data-action="fiche" data-id="${h(c.id)}" class="inline-flex items-center gap-2 rounded-2xl bg-white px-3 py-1.5 text-left text-[15px] ring-1 ring-neutral-200 hover:bg-neutral-50 active:bg-neutral-100 dark:bg-neutral-900 dark:ring-neutral-700 dark:hover:bg-neutral-800 ${extra}"><span class="size-2 shrink-0 rounded-full ${couleurFamille[f.id].point}"></span>${h(c.nom)}</button>`
 }
 
 // Le nom de la famille avec sa lettre CAR/PPP en évidence: Charges, Capitaux Propres.
@@ -123,12 +124,12 @@ export function miniCarPpp(actif: FamilleId): string {
     const f = familleParId[id]
     const on = id === actif
     return `<a href="#synthese/famille-${id}" title="${h(f.nom)}" class="flex h-8 min-w-8 items-center justify-center rounded-md px-1.5 text-sm font-bold ${
-      on ? `${couleurFamille[id].puce} ring-2` : 'text-slate-400 dark:text-slate-600'
+      on ? `${couleurFamille[id].puce} ring-2` : 'text-neutral-400 dark:text-neutral-600'
     }">${h(f.lettre)}</a>`
   }
   const gauche = familles.filter(f => f.solde === 'debiteur').map(f => case_(f.id)).join('')
   const droite = familles.filter(f => f.solde === 'crediteur').map(f => case_(f.id)).join('')
-  return `<div class="inline-flex items-center gap-0.5 rounded-lg bg-slate-100 p-1 dark:bg-slate-800">${gauche}<span class="mx-1 h-6 w-px bg-slate-300 dark:bg-slate-600"></span>${droite}</div>`
+  return `<div class="inline-flex items-center gap-0.5 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800">${gauche}<span class="mx-1 h-6 w-px bg-neutral-300 dark:bg-neutral-600"></span>${droite}</div>`
 }
 
 // Une ligne qui relie les trois réponses d'un compte:
@@ -140,10 +141,10 @@ export function resume(c: Compte, focus?: PaquetId): string {
   const seg = (p: PaquetId | null, href: string, contenu: string) =>
     `<a href="${href}" class="${
       focus === p
-        ? 'font-semibold text-slate-900 underline decoration-2 underline-offset-4 dark:text-white'
-        : 'text-slate-600 hover:underline dark:text-slate-300'
+        ? 'font-semibold text-neutral-900 underline decoration-boost decoration-2 underline-offset-4 dark:text-white'
+        : 'text-neutral-600 hover:underline dark:text-neutral-300'
     }">${contenu}</a>`
-  const sep = '<span aria-hidden="true" class="text-slate-300 dark:text-slate-600">·</span>'
+  const sep = '<span aria-hidden="true" class="text-neutral-300 dark:text-neutral-600">·</span>'
   return `<p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] leading-relaxed">
     ${seg('categorie', `#synthese/cat-${cat.id}`, h(cat.nom))} ${sep}
     ${seg(null, `#synthese/famille-${f.id}`, `<span class="font-bold ${couleurFamille[f.id].texte}">${h(f.lettre)}</span> de ${f.solde === 'debiteur' ? 'CAR' : 'PPP'}`)} ${sep}
@@ -154,7 +155,7 @@ export function resume(c: Compte, focus?: PaquetId): string {
 
 export function pointNote(carteId: string): string {
   const s = suiviDe(carteId)
-  if (!s) return `<span title="Jamais vue" class="inline-block size-2.5 rounded-full ring-1 ring-slate-300 dark:ring-slate-600"></span>`
+  if (!s) return `<span title="Jamais vue" class="inline-block size-2.5 rounded-full ring-1 ring-neutral-300 dark:ring-neutral-600"></span>`
   return `<span title="${h(noteNom[s.note])}" class="inline-block size-2.5 rounded-full ${couleurNote[s.note].point}"></span>`
 }
 

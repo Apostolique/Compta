@@ -1,11 +1,20 @@
 @import 'tailwindcss';
 
+/* Couleurs de Boost for Reddit: gris neutres du thème sombre et accent orange (Orange A400). */
+@theme {
+  --color-neutral-800: #303030;
+  --color-neutral-900: #212121;
+  --color-neutral-950: #121212;
+  --color-boost: #ff9100;
+  --color-boost-fonce: #ff6d00;
+}
+
 @layer components {
   .onglet {
-    @apply rounded-lg px-3 py-1.5 text-slate-600 dark:text-slate-300;
+    @apply rounded-lg px-3 py-1.5 text-neutral-600 dark:text-neutral-300;
   }
   .onglet[aria-current='page'] {
-    @apply bg-white text-slate-900 shadow-sm dark:bg-slate-950 dark:text-white;
+    @apply bg-boost text-neutral-950 shadow-sm;
   }
 }
 
@@ -31,11 +40,11 @@ button:disabled {
 @keyframes surbrillance {
   0%,
   35% {
-    outline: 3px solid rgb(250 204 21 / 0.9);
+    outline: 3px solid rgb(255 145 0 / 0.9);
     outline-offset: 8px;
   }
   100% {
-    outline: 3px solid rgb(250 204 21 / 0);
+    outline: 3px solid rgb(255 145 0 / 0);
     outline-offset: 8px;
   }
 }
