@@ -185,6 +185,9 @@ const boutonBase = 'rounded-xl py-3 font-semibold transition active:scale-[0.98]
 const bouton = `${boutonBase} px-4`
 const boutonSecondaire = `${bouton} bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700`
 const boutonPrincipal = `${bouton} bg-slate-900 text-white hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200`
+// Les boutons de la barre du bas ne rapetissent pas au toucher: sur iPhone, une barre fixe
+// dont le contenu change pendant cette animation peut ne pas redessiner le texte.
+const boutonBarre = 'rounded-xl py-3 font-semibold transition-colors'
 
 export function reviserHtml(): string {
   if (!reglages && enCours()) return carteHtml(session!)
@@ -307,6 +310,8 @@ function carteHtml(s: Session): string {
   const progression = Math.round((s.pos / s.passages.length) * 100)
 
   // Une fois la réponse affichée, on garde seulement la bonne réponse et le mauvais choix.
+  // Les longues listes passent sur deux colonnes pour tenir dans l'écran d'un téléphone.
+  const deuxColonnes = !p.revele && paquet.options.length > 4
   const options = paquet.options
     .filter(o => !p.revele || o.id === bonne || o.id === p.choix)
     .map(o => {
@@ -322,8 +327,9 @@ function carteHtml(s: Session): string {
           marque = '<span aria-hidden="true">✗</span>'
         }
       }
+      const taille = deuxColonnes ? 'px-3 py-2.5 text-[15px] leading-snug sm:px-4 sm:py-3 sm:text-[17px]' : 'px-4 py-3 text-[17px]'
       return `<button type="button" data-action="choisir" data-valeur="${h(o.id)}" ${p.revele ? 'disabled' : ''}
-        class="flex w-full items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-[17px] font-medium ring-1 transition active:scale-[0.99] ${style}">
+        class="flex w-full items-center justify-between gap-2 rounded-xl text-left font-medium ring-1 transition active:scale-[0.99] ${taille} ${style}">
         <span>${h(o.nom)}</span>${marque}
       </button>`
     })
@@ -333,31 +339,31 @@ function carteHtml(s: Session): string {
   if (p.revele && p.choix) {
     verdict =
       p.choix === bonne
-        ? '<p class="text-lg font-semibold text-green-700 dark:text-green-400">Bonne réponse!</p>'
-        : '<p class="text-lg font-semibold text-red-700 dark:text-red-400">Pas tout à fait.</p>'
+        ? '<p class="font-semibold text-green-700 sm:text-lg dark:text-green-400">Bonne réponse!</p>'
+        : '<p class="font-semibold text-red-700 sm:text-lg dark:text-red-400">Pas tout à fait.</p>'
   }
 
   const verso = p.revele
-    ? `<div class="mt-6 space-y-4">
+    ? `<div class="mt-4 space-y-2.5 sm:mt-6 sm:space-y-4">
         ${verdict}
         ${resume(compte, paquet.id)}
-        <p class="text-[17px] leading-relaxed text-slate-700 dark:text-slate-200">${h(compte.note ?? categorieParId[compte.categorie].description)}</p>
+        <p class="leading-normal text-slate-700 sm:text-[17px] sm:leading-relaxed dark:text-slate-200">${h(compte.note ?? categorieParId[compte.categorie].description)}</p>
         <button type="button" data-action="fiche" data-id="${h(compte.id)}" class="text-[15px] font-semibold underline underline-offset-4">Voir la fiche du compte</button>
       </div>`
     : ''
 
   const actions = !p.revele
-    ? `<button type="button" data-action="reveler" class="${boutonSecondaire} w-full">Afficher la réponse</button>`
+    ? `<button type="button" data-action="reveler" class="${boutonBarre} w-full bg-slate-100 px-4 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">Afficher la réponse</button>`
     : `<div class="grid grid-cols-4 gap-2">${notes
         .map(
           n => `<button type="button" data-action="noter" data-valeur="${n.id}"
-            class="${boutonBase} whitespace-nowrap px-1 text-[15px] ${couleurNote[n.id].bouton} ${p.note && p.note !== n.id ? 'opacity-50' : ''} ${p.note === n.id ? 'ring-4 ring-offset-2 ring-slate-400 ring-offset-white dark:ring-offset-slate-950' : ''}">
+            class="${boutonBarre} whitespace-nowrap px-1 text-[15px] ${couleurNote[n.id].bouton} ${p.note && p.note !== n.id ? 'opacity-50' : ''} ${p.note === n.id ? 'ring-4 ring-offset-2 ring-slate-400 ring-offset-white dark:ring-offset-slate-950' : ''}">
             ${h(n.nom)}<span class="hidden text-xs font-normal opacity-80 sm:block">${n.touche}</span>
           </button>`,
         )
         .join('')}</div>`
 
-  return `<div class="mx-auto max-w-xl px-4 pt-4 pb-44 sm:pt-8 sm:pb-8">
+  return `<div class="mx-auto max-w-xl px-4 pt-3 pb-[calc(5.5rem+env(safe-area-inset-bottom))] sm:pt-8 sm:pb-8">
     <div class="flex items-center justify-between gap-2 text-sm">
       <button type="button" data-action="precedent" ${s.pos === 0 ? 'disabled' : ''} class="rounded-lg px-2 py-1.5 font-semibold hover:bg-slate-100 disabled:opacity-30 dark:hover:bg-slate-800">← Précédente</button>
       <span class="tabular-nums text-slate-500 dark:text-slate-400">${s.pos + 1} / ${s.passages.length}</span>
@@ -367,19 +373,19 @@ function carteHtml(s: Session): string {
           : `<button type="button" data-action="terminer" class="rounded-lg px-2 py-1.5 font-semibold text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800">Terminer</button>`
       }
     </div>
-    <div class="mt-2 h-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+    <div class="mt-1 h-1 overflow-hidden sm:mt-2 rounded-full bg-slate-200 dark:bg-slate-800">
       <div class="h-full rounded-full bg-slate-900 transition-all dark:bg-white" style="width:${progression}%"></div>
     </div>
 
-    <article class="mt-5 rounded-2xl border-t-4 ${couleurFamille[f.id].bord} bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6 dark:bg-slate-900 dark:ring-slate-800">
+    <article class="mt-3 rounded-2xl border-t-4 ${couleurFamille[f.id].bord} bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:mt-5 sm:p-6 dark:bg-slate-900 dark:ring-slate-800">
       <p class="text-sm text-slate-500 dark:text-slate-400">${h(paquet.nom)}</p>
-      <h2 class="mt-1 text-3xl font-bold leading-tight">${h(compte.nom)}</h2>
-      <p class="mt-2 text-[17px] text-slate-600 dark:text-slate-300">${h(paquet.question)}</p>
-      <div class="mt-5 space-y-2">${options}</div>
+      <h2 class="mt-1 text-2xl font-bold leading-tight sm:text-3xl">${h(compte.nom)}</h2>
+      <p class="mt-1 text-slate-600 sm:mt-2 sm:text-[17px] dark:text-slate-300">${h(paquet.question)}</p>
+      <div class="mt-4 sm:mt-5 ${deuxColonnes ? 'grid grid-cols-2 gap-2' : 'space-y-2'}">${options}</div>
       ${verso}
     </article>
 
-    <div class="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] backdrop-blur sm:static sm:mt-4 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none dark:border-slate-800 dark:bg-slate-950/90 sm:dark:bg-transparent">
+    <div class="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white px-4 pt-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:static sm:mt-4 sm:border-0 sm:bg-transparent sm:p-0 dark:border-slate-800 dark:bg-slate-950 sm:dark:bg-transparent">
       <div class="mx-auto max-w-xl">${actions}</div>
     </div>
   </div>`
