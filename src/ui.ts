@@ -21,9 +21,8 @@ export function h(texte: string | number): string {
     .replace(/"/g, '&quot;')
 }
 
-// Chaque famille garde la même couleur partout dans le site. Les teintes viennent de la palette
-// des commentaires de Boost for Reddit. Les classes sont écrites au complet pour que Tailwind les
-// trouve.
+// Chaque famille garde la même couleur partout dans le site. Les classes sont écrites au complet
+// pour que Tailwind les trouve.
 export const couleurFamille: Record<FamilleId, { puce: string; bord: string; texte: string; fond: string; point: string }> = {
   charges: {
     puce: 'bg-pink-100 text-pink-900 ring-pink-400 dark:bg-pink-500/20 dark:text-pink-200 dark:ring-pink-400/60',

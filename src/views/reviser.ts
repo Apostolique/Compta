@@ -288,7 +288,7 @@ function reglagesHtml(): string {
         <label class="flex items-start gap-3 text-[15px]">
           <input type="checkbox" data-action="reglage-ponderer" ${config.ponderer ? 'checked' : ''} class="mt-0.5 size-5 shrink-0 accent-boost">
           <span>Montrer plus souvent les cartes difficiles
-            <span class="block text-sm text-neutral-500 dark:text-neutral-400">Les cartes À revoir et Difficile reviennent une deuxième fois, et les faciles passent à la fin. Toutes les cartes sortent quand même au moins une fois.</span>
+            <span class="block text-sm text-neutral-500 dark:text-neutral-400">Les cartes À revoir et Difficile reviennent une deuxième fois alors que les faciles passent à la fin. Toutes les cartes sortent quand même au moins une fois.</span>
           </span>
         </label>
 

@@ -113,7 +113,7 @@ const chapitres: Chapitre[] = [
   {
     id: 'debit-credit',
     titre: 'Débit et crédit',
-    sousTitre: 'Deux côtés, gauche et droite',
+    sousTitre: 'Le débit à gauche, le crédit à droite',
     contenu: () => `
       <p class="${lead}">Chaque transaction touche au moins deux comptes. On inscrit un montant au <strong>débit</strong> d’un compte et le même montant au <strong>crédit</strong> d’un autre.</p>
       <div class="grid grid-cols-2 overflow-hidden rounded-2xl text-center ring-1 ring-neutral-200 dark:ring-neutral-800">
@@ -152,7 +152,7 @@ const chapitres: Chapitre[] = [
       return `
       <p class="${lead}">Tout part de l’équation du bilan.</p>
       <p class="${boite} p-4 text-center text-lg font-semibold">Actifs = Passifs + Capitaux propres</p>
-      <p class="${lead}">Les capitaux propres grossissent avec les produits et rapetissent avec les charges et les retraits. On remplace les capitaux propres par leurs morceaux, puis on fait passer ce qui est soustrait de l’autre côté.</p>
+      <p class="${lead}">Les capitaux propres grossissent avec les produits alors qu’ils rapetissent avec les charges et les retraits. On remplace les capitaux propres par leurs morceaux, puis on fait passer ce qui est soustrait de l’autre côté.</p>
       <p class="${boite} p-4 text-center text-lg font-semibold">Charges + Actifs + Retraits<br>= Passifs + Capital + Produits</p>
       <p class="text-center text-4xl font-black tracking-wide">${l('charges')}${l('actifs')}${l('retraits')} = ${l('passifs')} ${l('capitaux')} ${l('produits')}</p>
       <p class="${lead}">C’est pour ça que le total des débits égale toujours le total des crédits.</p>`
@@ -161,7 +161,7 @@ const chapitres: Chapitre[] = [
   {
     id: 'ecritures',
     titre: 'Des exemples',
-    sousTitre: 'Six écritures, une à la fois',
+    sousTitre: 'Six écritures à voir une à la fois',
     contenu: () => `
       <p class="${lead}">Le compte débité est inscrit en premier. Le compte crédité est décalé vers la droite.</p>
       <div class="${boite} p-4 sm:p-5">${ecritureHtml(ecritures[exemple])}</div>
@@ -174,7 +174,7 @@ const chapitres: Chapitre[] = [
   {
     id: 'etats',
     titre: 'Les états financiers',
-    sousTitre: 'Trois rapports, dans cet ordre',
+    sousTitre: 'Trois rapports à préparer dans l’ordre',
     contenu: () => `
       <p class="${lead}">On les prépare dans cet ordre, parce que chacun donne un chiffre au suivant.</p>
       <div>${etats

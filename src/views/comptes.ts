@@ -75,7 +75,7 @@ export function comptesHtml(): string {
       <details class="group">
         <summary class="cursor-pointer text-[15px] font-semibold text-neutral-600 dark:text-neutral-300">Sauvegarde</summary>
         <div class="mt-3 space-y-3">
-          <p class="text-[15px] leading-relaxed text-neutral-600 dark:text-neutral-300">La progression reste dans ce navigateur. Sur iPhone, Safari peut l’effacer après une semaine sans visite. Pour l’éviter, ajoute le site à l’écran d’accueil (Partager, puis « Sur l’écran d’accueil »), ou télécharge une sauvegarde de temps en temps.</p>
+          <p class="text-[15px] leading-relaxed text-neutral-600 dark:text-neutral-300">La progression reste dans ce navigateur. Sur iPhone, Safari peut l’effacer après une semaine sans visite. Pour l’éviter, tu peux ajouter le site à l’écran d’accueil (Partager, puis « Sur l’écran d’accueil ») ou télécharger une sauvegarde de temps en temps.</p>
           <div class="flex flex-wrap gap-2">
             <button type="button" data-action="exporter" class="rounded-xl bg-boost px-4 py-2.5 font-semibold text-neutral-950 hover:bg-boost-fonce">Télécharger</button>
             <label class="cursor-pointer rounded-xl bg-neutral-100 px-4 py-2.5 font-semibold hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700">

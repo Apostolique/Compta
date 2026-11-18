@@ -149,7 +149,7 @@ document.addEventListener('click', e => {
     case 'effacer':
       if (!confirmationEffacer) {
         confirmationEffacer = true
-        el.textContent = 'Toucher encore pour tout effacer'
+        el.textContent = 'Touche encore pour tout effacer'
         setTimeout(() => {
           confirmationEffacer = false
           if (el.isConnected) el.textContent = 'Tout effacer'

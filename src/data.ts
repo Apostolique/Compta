@@ -286,7 +286,7 @@ export const comptes: Compte[] = [
     id: 'salaires-payer',
     nom: 'Salaires à payer',
     categorie: 'passif-ct',
-    note: "Le travail est fait, mais les employés ne sont pas encore payés. « À payer » = on doit de l’argent = passif. Ne pas confondre avec Salaires (la charge).",
+    note: "Le travail est fait, mais les employés ne sont pas encore payés. « À payer » = on doit de l’argent = passif. Salaires tout court, c’est la charge.",
   },
   { id: 'tps-payer', nom: 'TPS à payer', categorie: 'passif-ct', note: TPS_PAYER },
   { id: 'tvq-payer', nom: 'TVQ à payer', categorie: 'passif-ct', note: TPS_PAYER },
@@ -295,14 +295,14 @@ export const comptes: Compte[] = [
     id: 'publicite-payer',
     nom: 'Publicité à payer',
     categorie: 'passif-ct',
-    note: 'La pub a été faite mais pas encore payée. Ne pas confondre avec Publicité (la charge).',
+    note: 'La pub a été faite, mais pas encore payée. Publicité tout court, c’est la charge.',
   },
   { id: 'autres-charges-payer', nom: 'Autres charges à payer', categorie: 'passif-ct' },
   {
     id: 'effet-payer-ct',
     nom: 'Effet à payer (court terme)',
     categorie: 'passif-ct',
-    note: "Un effet à payer est une promesse écrite de payer. Échéance d’un an ou moins: court terme.",
+    note: "Un effet à payer est une promesse écrite de payer. L’échéance est d’un an ou moins, donc c’est à court terme.",
   },
   {
     id: 'produits-percus-avance',
@@ -362,9 +362,9 @@ export const comptes: Compte[] = [
     id: 'salaires',
     nom: 'Salaires',
     categorie: 'charges',
-    note: 'Le coût du travail de la période. Ne pas confondre avec Salaires à payer (le passif).',
+    note: 'Le coût du travail de la période. Salaires à payer, c’est le passif.',
   },
-  { id: 'loyer', nom: 'Loyer', categorie: 'charges', note: "Le loyer du mois, consommé. Ne pas confondre avec Loyer payé d’avance (l’actif)." },
+  { id: 'loyer', nom: 'Loyer', categorie: 'charges', note: "Le loyer du mois, consommé. Loyer payé d’avance, c’est l’actif." },
   { id: 'publicite', nom: 'Publicité', categorie: 'charges' },
   { id: 'electricite', nom: 'Électricité', categorie: 'charges' },
   { id: 'telecommunication', nom: 'Télécommunication', categorie: 'charges' },
@@ -381,12 +381,11 @@ export const comptes: Compte[] = [
     id: 'frais-bureau',
     nom: 'Frais de bureau',
     categorie: 'charges',
-    note: 'Des dépenses de bureau consommées. Ne pas confondre avec Fournitures de bureau (l’actif, encore en main).',
+    note: 'Des dépenses de bureau consommées. Fournitures de bureau, c’est l’actif (ce qui est encore en main).',
   },
   { id: 'autres-charges', nom: 'Autres charges', categorie: 'charges' },
 ]
 
-// Recherches rapides.
 export const familleParId = Object.fromEntries(familles.map(f => [f.id, f])) as Record<FamilleId, Famille>
 export const categorieParId = Object.fromEntries(categories.map(c => [c.id, c])) as Record<CategorieId, Categorie>
 export const etatParId = Object.fromEntries(etats.map(e => [e.id, e])) as Record<EtatId, Etat>
@@ -443,7 +442,6 @@ export const cartes: Carte[] = paquets.flatMap(p =>
 
 export const carteParId = Object.fromEntries(cartes.map(c => [c.id, c])) as Record<string, Carte>
 
-// Exemples d'écritures pour relier les comptes entre eux.
 export interface Ecriture {
   titre: string
   debit: { compte: string; montant: number }
@@ -490,7 +488,6 @@ export const ecritures: Ecriture[] = [
   },
 ]
 
-// Indices de vocabulaire pour deviner la catégorie à partir du nom.
 export const indices: { motif: string; categorie: CategorieId; explication: string; exemples: string[] }[] = [
   {
     motif: '… à recevoir',
@@ -501,7 +498,7 @@ export const indices: { motif: string; categorie: CategorieId; explication: stri
   {
     motif: '… payé d’avance',
     categorie: 'actif-ct',
-    explication: 'On a payé pour un service futur, on y a droit.',
+    explication: 'On a payé pour un service futur, donc on y a droit.',
     exemples: ['loyer-paye-avance', 'assurance-payee-avance'],
   },
   {
@@ -525,7 +522,7 @@ export const indices: { motif: string; categorie: CategorieId; explication: stri
   {
     motif: 'Un bien qui dure des années',
     categorie: 'immobilisations',
-    explication: "C’est un actif à long terme. On l’utilise pour faire rouler l’entreprise, on ne le revend pas.",
+    explication: "C’est un actif à long terme. On l’utilise pour faire rouler l’entreprise, pas pour le revendre.",
     exemples: ['batiment', 'materiel-roulant', 'equipement'],
   },
   {
