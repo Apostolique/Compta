@@ -35,32 +35,32 @@ export const couleurFamille: Record<FamilleId, { puce: string; bord: string; tex
     point: 'bg-pink-500 dark:bg-pink-400',
   },
   actifs: {
-    puce: 'bg-cyan-100 text-cyan-900 ring-cyan-400 dark:bg-cyan-500/20 dark:text-cyan-200 dark:ring-cyan-400/60',
-    bord: 'border-cyan-500 dark:border-cyan-400',
-    texte: 'text-cyan-600 dark:text-cyan-400',
-    fond: 'bg-cyan-50 dark:bg-cyan-500/15',
-    point: 'bg-cyan-500 dark:bg-cyan-400',
+    puce: 'bg-sky-100 text-sky-900 ring-sky-400 dark:bg-cyan-500/20 dark:text-cyan-200 dark:ring-cyan-400/60',
+    bord: 'border-sky-500 dark:border-cyan-400',
+    texte: 'text-sky-600 dark:text-cyan-400',
+    fond: 'bg-sky-50 dark:bg-cyan-500/15',
+    point: 'bg-sky-500 dark:bg-cyan-400',
   },
   retraits: {
-    puce: 'bg-purple-100 text-purple-900 ring-purple-400 dark:bg-purple-500/20 dark:text-purple-200 dark:ring-purple-400/60',
-    bord: 'border-purple-500 dark:border-purple-400',
-    texte: 'text-purple-600 dark:text-purple-400',
-    fond: 'bg-purple-50 dark:bg-purple-500/15',
-    point: 'bg-purple-500 dark:bg-purple-400',
+    puce: 'bg-violet-100 text-violet-900 ring-violet-400 dark:bg-purple-500/20 dark:text-purple-200 dark:ring-purple-400/60',
+    bord: 'border-violet-500 dark:border-purple-400',
+    texte: 'text-violet-600 dark:text-purple-400',
+    fond: 'bg-violet-50 dark:bg-purple-500/15',
+    point: 'bg-violet-500 dark:bg-purple-400',
   },
   passifs: {
-    puce: 'bg-yellow-100 text-yellow-900 ring-yellow-400 dark:bg-yellow-500/20 dark:text-yellow-200 dark:ring-yellow-400/60',
-    bord: 'border-yellow-500 dark:border-yellow-400',
-    texte: 'text-yellow-600 dark:text-yellow-400',
-    fond: 'bg-yellow-50 dark:bg-yellow-500/15',
-    point: 'bg-yellow-500 dark:bg-yellow-400',
+    puce: 'bg-amber-100 text-amber-900 ring-amber-400 dark:bg-yellow-500/20 dark:text-yellow-200 dark:ring-yellow-400/60',
+    bord: 'border-amber-500 dark:border-yellow-400',
+    texte: 'text-amber-500 dark:text-yellow-400',
+    fond: 'bg-amber-50 dark:bg-yellow-500/15',
+    point: 'bg-amber-500 dark:bg-yellow-400',
   },
   capitaux: {
-    puce: 'bg-green-100 text-green-900 ring-green-400 dark:bg-green-500/20 dark:text-green-200 dark:ring-green-400/60',
-    bord: 'border-green-500 dark:border-green-400',
-    texte: 'text-green-600 dark:text-green-400',
-    fond: 'bg-green-50 dark:bg-green-500/15',
-    point: 'bg-green-500 dark:bg-green-400',
+    puce: 'bg-emerald-100 text-emerald-900 ring-emerald-400 dark:bg-green-500/20 dark:text-green-200 dark:ring-green-400/60',
+    bord: 'border-emerald-500 dark:border-green-400',
+    texte: 'text-emerald-600 dark:text-green-400',
+    fond: 'bg-emerald-50 dark:bg-green-500/15',
+    point: 'bg-emerald-500 dark:bg-green-400',
   },
   produits: {
     puce: 'bg-lime-100 text-lime-900 ring-lime-400 dark:bg-lime-500/20 dark:text-lime-200 dark:ring-lime-400/60',
@@ -69,6 +69,13 @@ export const couleurFamille: Record<FamilleId, { puce: string; bord: string; tex
     fond: 'bg-lime-50 dark:bg-lime-500/15',
     point: 'bg-lime-500 dark:bg-lime-400',
   },
+}
+
+// Le fond des panneaux Débit (gauche) et Crédit (droite). En clair, un panneau blanc avec une
+// barre de couleur en haut. Un fond teinté se battait avec les couleurs des lettres.
+export const fondCote: Record<SoldeId, string> = {
+  debiteur: 'bg-white border-t-4 border-t-teal-500 dark:border-t-0 dark:bg-teal-500/15',
+  crediteur: 'bg-white border-t-4 border-t-orange-500 dark:border-t-0 dark:bg-orange-500/15',
 }
 
 export const couleurSolde: Record<SoldeId, string> = {

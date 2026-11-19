@@ -22,7 +22,7 @@ import {
   type Famille,
   type FamilleId,
 } from '../data'
-import { badgeSolde, couleurFamille, h, montant, nomFamille, puceBase, puceCompte } from '../ui'
+import { badgeSolde, couleurFamille, fondCote, h, montant, nomFamille, puceBase, puceCompte } from '../ui'
 
 interface Chapitre {
   id: string
@@ -72,8 +72,8 @@ function schema(): string {
       <p class="mt-1 font-semibold">${regle}</p>
     </div>`
   return `<div class="grid grid-cols-2 overflow-hidden rounded-2xl text-center ring-1 ring-neutral-200 dark:ring-neutral-800">
-    ${colonne(['charges', 'actifs', 'retraits'], 'debiteur', 'bg-teal-50 dark:bg-teal-500/15', 'Où la valeur va', 'Débit ↑ Crédit ↓')}
-    ${colonne(['passifs', 'capitaux', 'produits'], 'crediteur', 'border-l border-neutral-200 bg-orange-50 dark:border-neutral-800 dark:bg-orange-500/15', 'D’où la valeur vient', 'Débit ↓ Crédit ↑')}
+    ${colonne(['charges', 'actifs', 'retraits'], 'debiteur', fondCote.debiteur, 'Où la valeur va', 'Débit ↑ Crédit ↓')}
+    ${colonne(['passifs', 'capitaux', 'produits'], 'crediteur', `border-l border-neutral-200 dark:border-neutral-800 ${fondCote.crediteur}`, 'D’où la valeur vient', 'Débit ↓ Crédit ↑')}
   </div>`
 }
 
@@ -393,7 +393,7 @@ function colonnesHtml(): string {
   }
   return `<div class="grid grid-cols-2 overflow-hidden rounded-2xl ring-1 ring-neutral-200 dark:ring-neutral-800">${colonnes
     .map((col, i) => {
-      const fond = col.id.endsWith('debiteur') ? 'bg-teal-50 dark:bg-teal-500/15' : 'border-l border-neutral-200 bg-orange-50 dark:border-neutral-800 dark:bg-orange-500/15'
+      const fond = col.id.endsWith('debiteur') ? fondCote.debiteur : `border-l border-neutral-200 dark:border-neutral-800 ${fondCote.crediteur}`
       return `<div class="${fond} ${i >= 2 ? 'border-t border-neutral-200 dark:border-neutral-800' : ''} p-4">
         <p class="text-sm font-semibold ${doux}">${h(col.nom)}</p>
         <ul class="mt-2 space-y-1">${contenu[col.id].map(x => `<li>${x}</li>`).join('')}</ul>
@@ -410,8 +410,8 @@ const chapitres: Chapitre[] = [
     contenu: () => `
       <p class="${lead}">Chaque transaction touche au moins deux comptes. On inscrit un montant au <strong>débit</strong> d’un compte et le même montant au <strong>crédit</strong> d’un autre.</p>
       <div class="grid grid-cols-2 overflow-hidden rounded-2xl text-center ring-1 ring-neutral-200 dark:ring-neutral-800">
-        <div class="bg-teal-50 p-5 dark:bg-teal-500/15"><p class="text-2xl font-bold">Débit</p><p class="${doux}">à gauche</p></div>
-        <div class="border-l border-neutral-200 bg-orange-50 p-5 dark:border-neutral-800 dark:bg-orange-500/15"><p class="text-2xl font-bold">Crédit</p><p class="${doux}">à droite</p></div>
+        <div class="${fondCote.debiteur} p-5"><p class="text-2xl font-bold">Débit</p><p class="${doux}">à gauche</p></div>
+        <div class="border-l border-neutral-200 dark:border-neutral-800 ${fondCote.crediteur} p-5"><p class="text-2xl font-bold">Crédit</p><p class="${doux}">à droite</p></div>
       </div>
       <ul class="list-disc space-y-3 pl-5 ${lead}">
         <li>Ce ne sont que des côtés. Rien de plus.</li>
