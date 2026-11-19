@@ -73,7 +73,7 @@ function schema(): string {
     </div>`
   return `<div class="grid grid-cols-2 overflow-hidden rounded-2xl text-center ring-1 ring-neutral-200 dark:ring-neutral-800">
     ${colonne(['charges', 'actifs', 'retraits'], 'debiteur', fondCote.debiteur, 'Où la valeur va', 'Débit ↑ Crédit ↓')}
-    ${colonne(['passifs', 'capitaux', 'produits'], 'crediteur', `border-l border-neutral-200 dark:border-neutral-800 ${fondCote.crediteur}`, 'D’où la valeur vient', 'Débit ↓ Crédit ↑')}
+    ${colonne(['passifs', 'capitaux', 'produits'], 'crediteur', `border-l border-l-neutral-200 dark:border-l-neutral-800 ${fondCote.crediteur}`, 'D’où la valeur vient', 'Débit ↓ Crédit ↑')}
   </div>`
 }
 
@@ -392,9 +392,9 @@ function colonnesHtml(): string {
     }
   }
   return `<div class="grid grid-cols-2 overflow-hidden rounded-2xl ring-1 ring-neutral-200 dark:ring-neutral-800">${colonnes
-    .map((col, i) => {
-      const fond = col.id.endsWith('debiteur') ? fondCote.debiteur : `border-l border-neutral-200 dark:border-neutral-800 ${fondCote.crediteur}`
-      return `<div class="${fond} ${i >= 2 ? 'border-t border-neutral-200 dark:border-neutral-800' : ''} p-4">
+    .map(col => {
+      const fond = col.id.endsWith('debiteur') ? fondCote.debiteur : `border-l border-l-neutral-200 dark:border-l-neutral-800 ${fondCote.crediteur}`
+      return `<div class="${fond} p-4">
         <p class="text-sm font-semibold ${doux}">${h(col.nom)}</p>
         <ul class="mt-2 space-y-1">${contenu[col.id].map(x => `<li>${x}</li>`).join('')}</ul>
       </div>`
@@ -411,7 +411,7 @@ const chapitres: Chapitre[] = [
       <p class="${lead}">Chaque transaction touche au moins deux comptes. On inscrit un montant au <strong>débit</strong> d’un compte et le même montant au <strong>crédit</strong> d’un autre.</p>
       <div class="grid grid-cols-2 overflow-hidden rounded-2xl text-center ring-1 ring-neutral-200 dark:ring-neutral-800">
         <div class="${fondCote.debiteur} p-5"><p class="text-2xl font-bold">Débit</p><p class="${doux}">à gauche</p></div>
-        <div class="border-l border-neutral-200 dark:border-neutral-800 ${fondCote.crediteur} p-5"><p class="text-2xl font-bold">Crédit</p><p class="${doux}">à droite</p></div>
+        <div class="border-l border-l-neutral-200 dark:border-l-neutral-800 ${fondCote.crediteur} p-5"><p class="text-2xl font-bold">Crédit</p><p class="${doux}">à droite</p></div>
       </div>
       <ul class="list-disc space-y-3 pl-5 ${lead}">
         <li>Ce ne sont que des côtés. Rien de plus.</li>
