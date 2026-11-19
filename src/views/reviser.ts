@@ -392,7 +392,7 @@ function carteHtml(s: Session): string {
   </div>
   </div>
 
-    <div class="shrink-0 border-t border-neutral-200 bg-white px-4 pt-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:mt-4 sm:border-0 sm:bg-transparent sm:pt-0 sm:pb-8 dark:border-neutral-800 dark:bg-neutral-950 sm:dark:bg-transparent">
+    <div class="shrink-0 border-t border-neutral-200 bg-white px-4 pt-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] sm:mt-4 sm:border-0 sm:bg-transparent sm:pt-0 sm:pb-8 dark:border-neutral-800 dark:bg-neutral-950 sm:dark:bg-transparent">
       <div class="mx-auto max-w-xl sm:px-4">${actions}</div>
     </div>
   </div>`
