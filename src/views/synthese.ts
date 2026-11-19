@@ -544,7 +544,7 @@ const chapitres: Chapitre[] = [
         <summary class="${resumeRepliable}"><span class="flex-1 font-semibold">Comptes permanents et temporaires</span>${chevron}</summary>
         <div class="space-y-3 border-t border-neutral-200 p-4 text-[15px] leading-relaxed dark:border-neutral-800">
           <p>Les comptes du <strong>bilan</strong> (actifs, passifs, capital) sont <strong>permanents</strong>. Leur solde passe d’une période à l’autre: l’argent en banque le 31 décembre est encore là le 1er janvier.</p>
-          <p>Les <strong>produits</strong>, les <strong>charges</strong> et les <strong>retraits</strong> sont <strong>temporaires</strong>. Ils mesurent une seule période, alors les écritures de clôture les remettent à zéro et versent leur effet dans le capital.</p>
+          <p>Les <strong>produits</strong>, les <strong>charges</strong>, les <strong>apports</strong> et les <strong>retraits</strong> sont <strong>temporaires</strong>. Ils mesurent une seule période, alors les écritures de clôture les remettent à zéro et versent leur effet dans le capital.</p>
         </div>
       </details>`
     },

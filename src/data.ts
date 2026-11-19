@@ -679,7 +679,7 @@ export const etapesCycle: { nom: string; description: string; chiffrier?: boolea
   },
   {
     nom: 'Écritures de clôture',
-    description: "On remet à zéro les produits, les charges et les retraits. Le bénéfice net et les retraits passent dans le capital. La prochaine période repart de zéro.",
+    description: "On remet à zéro les produits, les charges, les apports et les retraits. Le bénéfice net, les apports et les retraits passent dans le capital. La prochaine période repart de zéro.",
   },
   {
     nom: 'Balance de vérification après clôture',
