@@ -66,9 +66,13 @@ function defiler(id: string) {
   })
 }
 
-// Les actions de révision changent seulement le contenu de la page.
+// Les actions de révision changent seulement le contenu de la page. Sur téléphone, la carte défile
+// dans sa propre zone: on garde sa position tant qu'on reste sur la même carte.
 function rendreReviser() {
+  const avant = main.querySelector<HTMLElement>('[data-defilement]')
   main.innerHTML = rev.reviserHtml()
+  const apres = main.querySelector<HTMLElement>('[data-defilement]')
+  if (avant && apres && avant.dataset.defilement === apres.dataset.defilement) apres.scrollTop = avant.scrollTop
 }
 
 let confirmationEffacer = false

@@ -187,7 +187,7 @@ const boutonSecondaire = `${bouton} bg-neutral-100 text-neutral-900 hover:bg-neu
 const boutonPrincipal = `${bouton} bg-boost text-neutral-950 hover:bg-boost-fonce`
 // Les boutons de la barre du bas ne rapetissent pas au toucher: sur iPhone, une barre fixe
 // dont le contenu change pendant cette animation peut ne pas redessiner le texte.
-const boutonBarre = 'rounded-xl py-3 font-semibold transition-colors'
+const boutonBarre = 'min-h-12 rounded-xl py-3 font-semibold transition-colors'
 
 export function reviserHtml(): string {
   if (!reglages && enCours()) return carteHtml(session!)
@@ -363,7 +363,12 @@ function carteHtml(s: Session): string {
         )
         .join('')}</div>`
 
-  return `<div class="mx-auto max-w-xl px-4 pt-3 pb-[calc(5.5rem+env(safe-area-inset-bottom))] sm:pt-8 sm:pb-8">
+  // Sur téléphone, la page elle-même ne défile pas: seule la carte défile, au-dessus de la barre de
+  // boutons. Si la page défilait, Firefox Android cacherait sa barre d'outils, la page passerait sous
+  // la barre de navigation du téléphone et la barre de boutons remonterait.
+  return `<div class="flex h-[calc(100dvh-3.5rem-1px-env(safe-area-inset-top))] flex-col sm:block sm:h-auto">
+  <div data-defilement="${h(`${s.pos}:${p.carte}`)}" class="min-h-0 flex-1 overflow-y-auto overscroll-contain sm:overflow-visible">
+  <div class="mx-auto max-w-xl px-4 pt-3 pb-4 sm:pt-8 sm:pb-0">
     <div class="flex items-center justify-between gap-2 text-sm">
       <button type="button" data-action="precedent" ${s.pos === 0 ? 'disabled' : ''} class="rounded-lg px-2 py-1.5 font-semibold hover:bg-neutral-100 disabled:opacity-30 dark:hover:bg-neutral-800">← Précédente</button>
       <span class="tabular-nums text-neutral-500 dark:text-neutral-400">${s.pos + 1} / ${s.passages.length}</span>
@@ -384,9 +389,11 @@ function carteHtml(s: Session): string {
       <div class="mt-4 sm:mt-5 ${deuxColonnes ? 'grid grid-cols-2 gap-2' : 'space-y-2'}">${options}</div>
       ${verso}
     </article>
+  </div>
+  </div>
 
-    <div class="fixed inset-x-0 bottom-0 z-20 border-t border-neutral-200 bg-white px-4 pt-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:static sm:mt-4 sm:border-0 sm:bg-transparent sm:p-0 dark:border-neutral-800 dark:bg-neutral-950 sm:dark:bg-transparent">
-      <div class="mx-auto max-w-xl">${actions}</div>
+    <div class="shrink-0 border-t border-neutral-200 bg-white px-4 pt-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:mt-4 sm:border-0 sm:bg-transparent sm:pt-0 sm:pb-8 dark:border-neutral-800 dark:bg-neutral-950 sm:dark:bg-transparent">
+      <div class="mx-auto max-w-xl sm:px-4">${actions}</div>
     </div>
   </div>`
 }
