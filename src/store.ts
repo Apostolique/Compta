@@ -79,7 +79,7 @@ export interface Config {
 }
 
 export const configParDefaut: Config = {
-  paquets: ['categorie', 'solde', 'etat'],
+  paquets: ['categorie', 'solde', 'etat', 'chiffrier'],
   filtres: ['nouvelle', 'again', 'hard', 'good', 'easy'],
   familles: ['charges', 'actifs', 'retraits', 'passifs', 'capitaux', 'produits'],
   melanger: true,

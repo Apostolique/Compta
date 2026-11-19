@@ -1,4 +1,4 @@
-import { categorieParId, compteParId, comptes, ecritures, familleDe, paquets, type Compte } from '../data'
+import { categorieParId, compteParId, comptes, ecritures, familleDe, paquets, regularisations, type Compte } from '../data'
 import { noteNom, suiviDe } from '../store'
 import { couleurNote, h, miniCarPpp, nomFamille, puceCompte, resume } from '../ui'
 import { ecritureHtml } from './synthese'
@@ -12,7 +12,7 @@ export function ficheHtml(c: Compte): string {
   const f = familleDe(c)
   const cat = categorieParId[c.categorie]
   const voisins = comptes.filter(x => x.categorie === c.categorie && x.id !== c.id)
-  const exemples = ecritures.filter(e => e.debit.compte === c.id || e.credit.compte === c.id)
+  const exemples = [...ecritures, ...regularisations].filter(e => e.debit.compte === c.id || e.credit.compte === c.id)
 
   const progression = paquets
     .map(p => {

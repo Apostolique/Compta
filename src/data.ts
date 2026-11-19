@@ -1,5 +1,5 @@
-// Une seule table de comptes. Les trois paquets de cartes (catégorie, solde, état
-// financier) en sont dérivés, donc les réponses restent toujours cohérentes entre elles.
+// Une seule table de comptes. Les paquets de cartes (catégorie, solde, état financier,
+// colonne du chiffrier) en sont dérivés, donc les réponses restent toujours cohérentes entre elles.
 
 export type FamilleId = 'charges' | 'actifs' | 'retraits' | 'passifs' | 'capitaux' | 'produits'
 export type CategorieId =
@@ -12,7 +12,7 @@ export type CategorieId =
   | 'charges'
 export type SoldeId = 'debiteur' | 'crediteur'
 export type EtatId = 'bilan' | 'resultats' | 'capitaux'
-export type PaquetId = 'categorie' | 'solde' | 'etat'
+export type PaquetId = 'categorie' | 'solde' | 'etat' | 'chiffrier'
 
 export interface Famille {
   id: FamilleId
@@ -196,6 +196,9 @@ export interface Compte {
   nom: string
   categorie: CategorieId
   retrait?: boolean
+  // Contre-compte: classé avec sa famille, mais son solde est du côté opposé
+  // (Amortissement cumulé est un actif au solde créditeur).
+  contre?: boolean
   note?: string
 }
 
@@ -225,6 +228,13 @@ export const comptes: Compte[] = [
     nom: 'Clients',
     categorie: 'actif-ct',
     note: "Les clients nous doivent de l’argent: c’est un compte à recevoir.",
+  },
+  {
+    id: 'provision-clients',
+    nom: 'Provision pour dépréciation – Clients',
+    categorie: 'actif-ct',
+    contre: true,
+    note: "La partie des comptes clients qu’on ne pense pas encaisser. C’est un contre-actif: il est classé avec les actifs, mais son solde est créditeur parce qu’il diminue Clients. Au chiffrier, il va dans la colonne Bilan crédit.",
   },
   {
     id: 'interets-recevoir',
@@ -268,6 +278,13 @@ export const comptes: Compte[] = [
     categorie: 'immobilisations',
     note: "Les véhicules de l’entreprise (camions, voitures).",
   },
+  {
+    id: 'amortissement-cumule',
+    nom: 'Amortissement cumulé',
+    categorie: 'immobilisations',
+    contre: true,
+    note: "Toute l’usure accumulée depuis l’achat d’une immobilisation. C’est un contre-actif: il est classé avec les immobilisations, mais son solde est créditeur parce qu’il diminue leur valeur. On ne crédite jamais l’immobilisation elle-même. Au chiffrier, il va dans la colonne Bilan crédit.",
+  },
 
   // Passif à court terme
   {
@@ -287,6 +304,12 @@ export const comptes: Compte[] = [
     nom: 'Salaires à payer',
     categorie: 'passif-ct',
     note: "Le travail est fait, mais les employés ne sont pas encore payés. « À payer » = on doit de l’argent = passif. Salaires tout court, c’est la charge.",
+  },
+  {
+    id: 'interets-payer',
+    nom: 'Intérêts à payer',
+    categorie: 'passif-ct',
+    note: "Des intérêts sur un emprunt qui ont couru pendant la période, mais qu’on n’a pas encore payés. On les inscrit avec une régularisation. Intérêts débiteurs, c’est la charge.",
   },
   { id: 'tps-payer', nom: 'TPS à payer', categorie: 'passif-ct', note: TPS_PAYER },
   { id: 'tvq-payer', nom: 'TVQ à payer', categorie: 'passif-ct', note: TPS_PAYER },
@@ -356,6 +379,26 @@ export const comptes: Compte[] = [
   { id: 'services-rendus', nom: 'Services rendus', categorie: 'produits' },
   { id: 'commissions-gagnees', nom: 'Commissions gagnées', categorie: 'produits' },
   { id: 'vente-billets', nom: 'Revenus de la vente de billets', categorie: 'produits' },
+  {
+    id: 'interets-crediteurs',
+    nom: 'Intérêts créditeurs',
+    categorie: 'produits',
+    note: "Des intérêts que l’entreprise gagne, sur un placement par exemple. « Créditeurs » parce que c’est un produit, au solde créditeur.",
+  },
+  {
+    id: 'rendus-rabais-ventes',
+    nom: 'Rendus et rabais sur ventes',
+    categorie: 'produits',
+    contre: true,
+    note: "La marchandise retournée par les clients ou les rabais qu’on leur accorde. C’est un contre-produit: il est classé avec les produits, mais son solde est débiteur parce qu’il diminue les ventes. Au chiffrier, il va dans la colonne Résultats débit.",
+  },
+  {
+    id: 'escomptes-ventes',
+    nom: 'Escomptes sur ventes',
+    categorie: 'produits',
+    contre: true,
+    note: "Le rabais accordé aux clients qui paient vite. C’est un contre-produit: il est classé avec les produits, mais son solde est débiteur parce qu’il diminue les ventes. Au chiffrier, il va dans la colonne Résultats débit.",
+  },
 
   // Charges
   {
@@ -383,6 +426,42 @@ export const comptes: Compte[] = [
     categorie: 'charges',
     note: 'Des dépenses de bureau consommées. Fournitures de bureau, c’est l’actif (ce qui est encore en main).',
   },
+  {
+    id: 'cmv',
+    nom: 'Coût des marchandises vendues',
+    categorie: 'charges',
+    note: "Ce que nous ont coûté les marchandises qu’on a vendues. Stock de marchandise, c’est l’actif (ce qui n’est pas encore vendu).",
+  },
+  {
+    id: 'fournitures-bureau-utilisees',
+    nom: 'Fournitures de bureau utilisées',
+    categorie: 'charges',
+    note: "Les fournitures consommées pendant la période. On la calcule avec une régularisation: le solde de Fournitures de bureau moins ce qui reste à l’inventaire.",
+  },
+  {
+    id: 'assurances',
+    nom: 'Assurances',
+    categorie: 'charges',
+    note: "La partie de l’assurance qui est expirée. Assurance payée d’avance, c’est l’actif (la partie pas encore utilisée).",
+  },
+  {
+    id: 'amortissement',
+    nom: 'Amortissement',
+    categorie: 'charges',
+    note: "L’usure d’une immobilisation pendant la période. La régularisation débite Amortissement et crédite Amortissement cumulé.",
+  },
+  {
+    id: 'interets-debiteurs',
+    nom: 'Intérêts débiteurs',
+    categorie: 'charges',
+    note: "Les intérêts que l’entreprise paie sur ses emprunts. « Débiteurs » parce que c’est une charge, au solde débiteur. Intérêts à payer, c’est le passif.",
+  },
+  {
+    id: 'depreciation-clients',
+    nom: 'Dépréciation des comptes clients',
+    categorie: 'charges',
+    note: "La perte estimée sur les clients qui ne paieront pas. La régularisation débite cette charge et crédite Provision pour dépréciation – Clients.",
+  },
   { id: 'autres-charges', nom: 'Autres charges', categorie: 'charges' },
 ]
 
@@ -394,6 +473,29 @@ export const compteParId = Object.fromEntries(comptes.map(c => [c.id, c])) as Re
 
 export function familleDe(c: Compte): Famille {
   return c.retrait ? familleParId.retraits : familleParId[categorieParId[c.categorie].famille]
+}
+
+export function soldeDe(c: Compte): SoldeId {
+  const s = familleDe(c).solde
+  if (!c.contre) return s
+  return s === 'debiteur' ? 'crediteur' : 'debiteur'
+}
+
+// Le chiffrier à 10 colonnes n'a pas de colonnes pour l'état des capitaux propres:
+// le capital et les retraits vont au bilan.
+export type ColonneId = 'resultats-debiteur' | 'resultats-crediteur' | 'bilan-debiteur' | 'bilan-crediteur'
+
+export const colonnes: { id: ColonneId; nom: string }[] = [
+  { id: 'resultats-debiteur', nom: 'Résultats · Débit' },
+  { id: 'resultats-crediteur', nom: 'Résultats · Crédit' },
+  { id: 'bilan-debiteur', nom: 'Bilan · Débit' },
+  { id: 'bilan-crediteur', nom: 'Bilan · Crédit' },
+]
+
+export const colonneParId = Object.fromEntries(colonnes.map(c => [c.id, c])) as Record<ColonneId, (typeof colonnes)[number]>
+
+export function colonneDe(c: Compte): ColonneId {
+  return `${familleDe(c).etat === 'resultats' ? 'resultats' : 'bilan'}-${soldeDe(c)}`
 }
 
 export interface Paquet {
@@ -417,7 +519,7 @@ export const paquets: Paquet[] = [
     nom: 'Débiteur ou créditeur?',
     question: 'Solde habituel?',
     options: soldes.map(s => ({ id: s.id, nom: s.nom })),
-    reponse: c => familleDe(c).solde,
+    reponse: c => soldeDe(c),
   },
   {
     id: 'etat',
@@ -425,6 +527,13 @@ export const paquets: Paquet[] = [
     question: 'Dans quel état financier?',
     options: etats.map(e => ({ id: e.id, nom: e.nom })),
     reponse: c => familleDe(c).etat,
+  },
+  {
+    id: 'chiffrier',
+    nom: 'Colonne du chiffrier',
+    question: 'Dans quelle colonne du chiffrier?',
+    options: colonnes,
+    reponse: c => colonneDe(c),
   },
 ]
 
@@ -531,4 +640,150 @@ export const indices: { motif: string; categorie: CategorieId; explication: stri
     explication: 'Le nom tout seul, sans « à payer » ni « d’avance ».',
     exemples: ['salaires', 'loyer', 'publicite'],
   },
+]
+
+// --- Cycle comptable ---
+
+export const etapesCycle: { nom: string; description: string; chiffrier?: boolean }[] = [
+  {
+    nom: 'Analyser les pièces justificatives',
+    description: "Une facture, un reçu, un relevé de banque. Pour chaque transaction, on trouve les comptes touchés et lequel est débité ou crédité.",
+  },
+  {
+    nom: 'Journaliser',
+    description: "On inscrit chaque transaction au journal général, en ordre de date: le compte débité, le compte crédité, les montants et une courte explication.",
+  },
+  {
+    nom: 'Reporter au grand livre',
+    description: "Chaque montant du journal est copié dans son compte au grand livre. Le grand livre donne le solde de chaque compte.",
+  },
+  {
+    nom: 'Balance de vérification',
+    description: "La liste de tous les comptes avec leur solde. Le total des débits doit égaler le total des crédits.",
+    chiffrier: true,
+  },
+  {
+    nom: 'Régularisations',
+    description: "À la fin de la période, on ajuste les comptes qui ne sont pas à jour: fournitures utilisées, assurance expirée, amortissement, intérêts courus, salaires courus.",
+    chiffrier: true,
+  },
+  {
+    nom: 'Balance de vérification régularisée',
+    description: "Les soldes une fois les régularisations faites. C’est avec ces montants qu’on prépare les états financiers.",
+    chiffrier: true,
+  },
+  {
+    nom: 'États financiers',
+    description: "État des résultats, état des capitaux propres, puis bilan, dans cet ordre.",
+    chiffrier: true,
+  },
+  {
+    nom: 'Écritures de clôture',
+    description: "On remet à zéro les produits, les charges et les retraits. Le bénéfice net et les retraits passent dans le capital. La prochaine période repart de zéro.",
+  },
+  {
+    nom: 'Balance de vérification après clôture',
+    description: "Il ne reste que les comptes du bilan (actifs, passifs, capital). On vérifie une dernière fois que débits et crédits sont égaux.",
+  },
+]
+
+// --- Régularisations ---
+
+export interface Regularisation extends Ecriture {
+  lettre: string
+  nom: string
+  calcul: string
+}
+
+// Les mêmes régularisations servent aux exemples et au chiffrier.
+export const regularisations: Regularisation[] = [
+  {
+    lettre: 'a',
+    nom: 'Fournitures utilisées',
+    titre: 'Le compte Fournitures de bureau montre 900 $. L’inventaire du 31 décembre en compte 250 $.',
+    calcul: '900 $ − 250 $ = 650 $ utilisées',
+    debit: { compte: 'fournitures-bureau-utilisees', montant: 650 },
+    credit: { compte: 'fournitures-bureau', montant: 650 },
+    pourquoi: "L’inventaire donne ce qui reste, pas ce qui a été utilisé. On inscrit la partie consommée (charge ↑, débit) et on la sort de l’actif (actif ↓, crédit). Il reste 250 $ dans Fournitures de bureau.",
+  },
+  {
+    lettre: 'b',
+    nom: 'Assurance expirée',
+    titre: 'Le 1er juillet, on a payé 1 200 $ pour un an d’assurance. Au 31 décembre, 6 mois sont passés.',
+    calcul: '1 200 $ × 6/12 = 600 $ expirés',
+    debit: { compte: 'assurances', montant: 600 },
+    credit: { compte: 'assurance-payee-avance', montant: 600 },
+    pourquoi: "La partie expirée est consommée (charge ↑, débit). Elle n’est plus payée d’avance (actif ↓, crédit). Le loyer et l’immatriculation payés d’avance suivent la même logique.",
+  },
+  {
+    lettre: 'c',
+    nom: 'Amortissement',
+    titre: 'Le camion s’use: l’amortissement de l’année est de 3 000 $.',
+    calcul: 'Montant donné, ou coût ÷ durée de vie',
+    debit: { compte: 'amortissement', montant: 3000 },
+    credit: { compte: 'amortissement-cumule', montant: 3000 },
+    pourquoi: "L’usure de l’année est une charge (débit). On ne touche pas au compte Matériel roulant: on crédite Amortissement cumulé, un contre-actif qui grossit chaque année.",
+  },
+  {
+    lettre: 'd',
+    nom: 'Intérêts courus',
+    titre: 'Un effet à payer de 12 000 $ porte intérêt à 5 % par an. 3 mois d’intérêts ont couru, pas encore payés.',
+    calcul: '12 000 $ × 5 % × 3/12 = 150 $',
+    debit: { compte: 'interets-debiteurs', montant: 150 },
+    credit: { compte: 'interets-payer', montant: 150 },
+    pourquoi: "Les intérêts appartiennent à cette période même s’ils ne sont pas payés (charge ↑, débit). On les doit (passif ↑, crédit).",
+  },
+  {
+    lettre: 'e',
+    nom: 'Salaires courus',
+    titre: 'Les employés ont travaillé les derniers jours de décembre. Ils seront payés en janvier: 800 $.',
+    calcul: 'Montant donné',
+    debit: { compte: 'salaires', montant: 800 },
+    credit: { compte: 'salaires-payer', montant: 800 },
+    pourquoi: "Le travail a été fait cette période (charge ↑, débit). On le doit encore aux employés (passif ↑, crédit).",
+  },
+  {
+    lettre: 'f',
+    nom: 'Dépréciation des clients',
+    titre: 'On estime que 200 $ des comptes clients ne seront jamais encaissés.',
+    calcul: 'Montant estimé, ou un % des clients',
+    debit: { compte: 'depreciation-clients', montant: 200 },
+    credit: { compte: 'provision-clients', montant: 200 },
+    pourquoi: "La perte estimée est une charge (débit). On ne touche pas au compte Clients: on crédite la Provision, un contre-actif qui le diminue.",
+  },
+]
+
+// --- Chiffrier d'exemple ---
+
+export interface LigneChiffrier {
+  compte: string
+  // Nom affiché s'il est plus précis que celui du compte.
+  nom?: string
+  // Solde de la balance non régularisée, du côté naturel du compte.
+  solde: number
+}
+
+export const lignesChiffrier: LigneChiffrier[] = [
+  { compte: 'encaisse', solde: 16000 },
+  { compte: 'clients', solde: 4000 },
+  { compte: 'provision-clients', solde: 0 },
+  { compte: 'fournitures-bureau', solde: 900 },
+  { compte: 'assurance-payee-avance', solde: 1200 },
+  { compte: 'materiel-roulant', solde: 30000 },
+  { compte: 'amortissement-cumule', nom: 'Amortissement cumulé – Matériel roulant', solde: 6000 },
+  { compte: 'fournisseurs', solde: 3500 },
+  { compte: 'salaires-payer', solde: 0 },
+  { compte: 'interets-payer', solde: 0 },
+  { compte: 'effet-payer-lt', solde: 12000 },
+  { compte: 'capital', solde: 20000 },
+  { compte: 'retraits', solde: 6000 },
+  { compte: 'services-rendus', solde: 42000 },
+  { compte: 'salaires', solde: 18000 },
+  { compte: 'loyer', solde: 6000 },
+  { compte: 'electricite', solde: 1400 },
+  { compte: 'fournitures-bureau-utilisees', solde: 0 },
+  { compte: 'assurances', solde: 0 },
+  { compte: 'amortissement', nom: 'Amortissement – Matériel roulant', solde: 0 },
+  { compte: 'interets-debiteurs', solde: 0 },
+  { compte: 'depreciation-clients', solde: 0 },
 ]

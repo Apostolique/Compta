@@ -1,9 +1,12 @@
 import {
   categorieParId,
+  colonneDe,
+  colonneParId,
   etatParId,
   familleDe,
   familleParId,
   familles,
+  soldeDe,
   soldeParId,
   type Compte,
   type Famille,
@@ -131,12 +134,13 @@ export function miniCarPpp(actif: FamilleId): string {
   return `<div class="inline-flex items-center gap-0.5 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800">${gauche}<span class="mx-1 h-6 w-px bg-neutral-300 dark:bg-neutral-600"></span>${droite}</div>`
 }
 
-// Une ligne qui relie les trois réponses d'un compte:
-// catégorie · lettre CAR/PPP · solde habituel · état financier.
+// Une ligne qui relie les réponses d'un compte:
+// catégorie · lettre CAR/PPP · solde habituel · état financier (· colonne du chiffrier).
 export function resume(c: Compte, focus?: PaquetId): string {
   const f = familleDe(c)
   const cat = categorieParId[c.categorie]
   const etat = etatParId[f.etat]
+  const solde = soldeDe(c)
   const seg = (p: PaquetId | null, href: string, contenu: string) =>
     `<a href="${href}" class="${
       focus === p
@@ -146,9 +150,10 @@ export function resume(c: Compte, focus?: PaquetId): string {
   const sep = '<span aria-hidden="true" class="text-neutral-300 dark:text-neutral-600">·</span>'
   return `<p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] leading-relaxed">
     ${seg('categorie', `#synthese/cat-${cat.id}`, h(cat.nom))} ${sep}
-    ${seg(null, `#synthese/famille-${f.id}`, `<span class="font-bold ${couleurFamille[f.id].texte}">${h(f.lettre)}</span> de ${f.solde === 'debiteur' ? 'CAR' : 'PPP'}`)} ${sep}
-    ${seg('solde', '#synthese/car-pcp', h(soldeParId[f.solde].nom))} ${sep}
+    ${seg(null, c.contre ? '#synthese/contre-comptes' : `#synthese/famille-${f.id}`, `${c.contre ? 'Contre-' : ''}<span class="font-bold ${couleurFamille[f.id].texte}">${h(f.lettre)}</span> de ${f.solde === 'debiteur' ? 'CAR' : 'PPP'}`)} ${sep}
+    ${seg('solde', c.contre ? '#synthese/contre-comptes' : '#synthese/car-pcp', h(soldeParId[solde].nom))} ${sep}
     ${seg('etat', `#synthese/etat-${etat.id}`, h(etat.nom))}
+    ${focus === 'chiffrier' ? `${sep} ${seg('chiffrier', '#synthese/colonnes-chiffrier', `Chiffrier: ${h(colonneParId[colonneDe(c)].nom)}`)}` : ''}
   </p>`
 }
 

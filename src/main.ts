@@ -4,7 +4,15 @@ import { effacerSuivi, exporterSuivi, importerSuivi, sauverSession, type Note } 
 import { comptesHtml, filtrerComptes } from './views/comptes'
 import { fermerFiche, ficheOuverte, ouvrirFiche } from './views/fiche'
 import * as rev from './views/reviser'
-import { changerExemple, syntheseHtml, trouverChapitre } from './views/synthese'
+import {
+  centrerChiffrier,
+  changerEtapeChiffrier,
+  changerExemple,
+  changerRegul,
+  etapeChiffrier,
+  syntheseHtml,
+  trouverChapitre,
+} from './views/synthese'
 
 type Page = 'reviser' | 'synthese' | 'comptes'
 
@@ -34,6 +42,7 @@ function rendre() {
   else if (page === 'synthese') {
     const cible = trouverChapitre(reste[0] ?? '')
     main.innerHTML = syntheseHtml(cible.chapitre)
+    centrerChiffrier()
     ancre = cible.ancre
   } else main.innerHTML = comptesHtml()
 
@@ -134,6 +143,20 @@ document.addEventListener('click', e => {
     case 'exemple-suiv':
       changerExemple(action === 'exemple-prec' ? -1 : 1)
       main.innerHTML = syntheseHtml('ecritures')
+      return
+    case 'regul-prec':
+    case 'regul-suiv':
+      changerRegul(action === 'regul-prec' ? -1 : 1)
+      main.innerHTML = syntheseHtml('regularisations')
+      return
+    case 'chiffrier-prec':
+    case 'chiffrier-suiv':
+    case 'chiffrier-etape':
+      changerEtapeChiffrier(
+        action === 'chiffrier-etape' ? Number(valeur) : etapeChiffrier() + (action === 'chiffrier-prec' ? -1 : 1),
+      )
+      main.innerHTML = syntheseHtml('chiffrier-exemple')
+      centrerChiffrier()
       return
     case 'reglage-paquet':
     case 'reglage-filtre':
