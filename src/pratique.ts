@@ -76,8 +76,15 @@ export function familleId(id: string): FamilleId {
 
 const nomsProprio: Record<string, string> = { capital: 'Capital', apports: 'Apports', retraits: 'Retraits' }
 
+// Seul l'équipement est amorti dans la simulation: ses deux comptes d'amortissement portent son nom.
+const nomsAmortissement: Record<string, string> = {
+  amortissement: 'Amortissement – Équipement',
+  'amortissement-cumule': 'Amortissement cumulé – Équipement',
+}
+
 export function nomCompte(sc: Scenario, id: string): string {
-  return nomsProprio[id] ? `${sc.proprio} – ${nomsProprio[id]}` : compteParId[id].nom
+  if (nomsProprio[id]) return `${sc.proprio} – ${nomsProprio[id]}`
+  return nomsAmortissement[id] ?? compteParId[id].nom
 }
 
 // --- Noms au hasard ---
@@ -641,7 +648,7 @@ function essayer(longueur: Longueur, premier: boolean): Scenario | null {
       libelle: 'Amortissement du mois',
       calcul: `(${nb(cout)} − ${nb(amort.residuelle)}) ÷ (${amort.ans} ans × 12 mois) = ${argent(amort.mens)} par mois`,
       lignes: [D('amortissement', amort.mens), C('amortissement-cumule', amort.mens)],
-      idee: 'On amortit seulement ce qu’on ne récupérera pas à la revente, et seulement pour un mois. L’usure est une charge. On ne touche pas au compte Équipement: on crédite Amortissement cumulé, un contre-actif.',
+      idee: 'On amortit seulement ce qu’on ne récupérera pas à la revente, et seulement pour un mois. L’usure est une charge. On ne touche pas au compte Équipement: on crédite Amortissement cumulé – Équipement, un contre-actif.',
     }),
     interets: () => {
       const i = (effet.capital * effet.taux) / 1200
@@ -1003,13 +1010,57 @@ export function saisieVide(t: Tache): Saisie {
   return { champs: {} }
 }
 
-// Accepte « 1 500 », « 1500 », « 1 500,00 », « 1,500 » et « 1 500 $ ».
-export function lireMontant(texte: string): number | null {
-  const t = texte.replace(/[\s  $]/g, '')
-  if (!t) return null
-  if (/^\d{1,3}([.,]\d{3})+$/.test(t)) return Number(t.replace(/[.,]/g, ''))
-  if (/^\d+([.,]\d{1,2})?$/.test(t)) return Number(t.replace(',', '.'))
+// Lit un nombre: « 1500 », « 1 500 », « 1,500 », « 1 500,00 », « 0,05 », « 1.14975 ».
+// Une virgule ou un point suivi d'exactement trois chiffres sépare les milliers.
+function lireNombre(t: string): number {
+  const virgule = t.includes(',')
+  const point = t.includes('.')
+  if (virgule && point) {
+    // Le dernier des deux est la décimale: « 1,500.50 » ou « 1.500,50 ».
+    const dec = t.lastIndexOf(',') > t.lastIndexOf('.') ? ',' : '.'
+    const [ent, frac, ...reste] = t.split(dec)
+    if (reste.length || !/^\d{1,3}([.,]\d{3})*$/.test(ent)) return NaN
+    return Number(`${ent.replace(/[.,]/g, '')}.${frac}`)
+  }
+  if (/^[1-9]\d{0,2}([.,]\d{3})+$/.test(t)) return Number(t.replace(/[.,]/g, ''))
+  if (/^\d*([.,]\d+)?$/.test(t) && /\d/.test(t)) return Number(t.replace(',', '.'))
   return NaN
+}
+
+// Lit un montant, qui peut être un calcul: « 500 + 700 », « 500 * 0,05 », « 1000 / 1,14975 ».
+// Le résultat est arrondi au cent. Vide donne null, et ce qui ne se lit pas donne NaN.
+export function lireMontant(texte: string): number | null {
+  const t = texte.replace(/[\s  $]/g, '').replace(/[×xX]/g, '*').replace(/÷/g, '/').replace(/[−–]/g, '-')
+  if (!t) return null
+  const jetons = t.match(/[\d.,]+|[-+*/()]|./g) ?? []
+  let i = 0
+  const somme = (): number => {
+    let v = produit()
+    while (jetons[i] === '+' || jetons[i] === '-') v = jetons[i++] === '+' ? v + produit() : v - produit()
+    return v
+  }
+  const produit = (): number => {
+    let v = facteur()
+    while (jetons[i] === '*' || jetons[i] === '/') {
+      const op = jetons[i++]
+      const w = facteur()
+      v = op === '*' ? v * w : w === 0 ? NaN : v / w
+    }
+    return v
+  }
+  const facteur = (): number => {
+    const j = jetons[i++]
+    if (j === '-') return -facteur()
+    if (j === '+') return facteur()
+    if (j === '(') {
+      const v = somme()
+      return jetons[i++] === ')' ? v : NaN
+    }
+    return j === undefined ? NaN : lireNombre(j)
+  }
+  const v = somme()
+  if (i < jetons.length || !Number.isFinite(v)) return NaN
+  return Math.round(v * 100) / 100
 }
 
 const sansDoublons = (l: string[]) => [...new Set(l)]
@@ -1025,7 +1076,7 @@ export function verifierEcriture(sc: Scenario, op: Operation, s: Saisie): Retour
     const d = lireMontant(l.d)
     const c = lireMontant(l.c)
     if (!l.compte) incomplet.push('Choisis un compte sur chaque ligne.')
-    if (Number.isNaN(d) || Number.isNaN(c)) incomplet.push('Écris les montants avec des chiffres seulement, genre 1500.')
+    if (Number.isNaN(d) || Number.isNaN(c)) incomplet.push('Écris les montants avec des chiffres, genre 1500 ou 500 + 700.')
     else if (d && c) incomplet.push('Une ligne va au débit ou au crédit, pas les deux.')
     else if (!d && !c) incomplet.push('Chaque ligne a besoin d’un montant.')
     return d ? { compte: l.compte, cote: 'd' as Cote, montant: d } : { compte: l.compte, cote: 'c' as Cote, montant: c ?? 0 }
@@ -1076,7 +1127,7 @@ export function verifierReport(op: Operation, s: Saisie): Retour {
 export function verifierSolde(solde: number, s: Saisie): Retour {
   const m = lireMontant(s.montant ?? '')
   if (m === null) return { ok: false, messages: ['Écris le solde.'] }
-  if (Number.isNaN(m)) return { ok: false, messages: ['Écris le montant avec des chiffres seulement, genre 1500.'] }
+  if (Number.isNaN(m)) return { ok: false, messages: ['Écris le montant avec des chiffres, genre 1500 ou 500 + 700.'] }
   if (m !== 0 && !s.cote) return { ok: false, messages: ['Choisis si le solde est débiteur ou créditeur.'] }
   const bonMontant = m === Math.abs(solde)
   const bonCote = solde === 0 || s.cote === (solde > 0 ? 'd' : 'c')
@@ -1089,7 +1140,7 @@ export function verifierSolde(solde: number, s: Saisie): Retour {
 export function verifierChamps(champs: Champ[], s: Saisie): Retour {
   const valeurs = champs.map(c => lireMontant(s.champs?.[c.id] ?? ''))
   if (valeurs.some(v => v === null)) return { ok: false, messages: [champs.length > 1 ? 'Remplis chaque case.' : 'Écris le total.'] }
-  if (valeurs.some(v => Number.isNaN(v))) return { ok: false, messages: ['Écris les montants avec des chiffres seulement, genre 1500.'] }
+  if (valeurs.some(v => Number.isNaN(v))) return { ok: false, messages: ['Écris les montants avec des chiffres, genre 1500 ou 500 + 700.'] }
   const bons = Object.fromEntries(champs.map((c, i) => [c.id, valeurs[i] === c.attendu]))
   const faux = champs.filter(c => !bons[c.id]).length
   return {

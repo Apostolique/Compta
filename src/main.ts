@@ -3,7 +3,7 @@ import { compteParId, familleParId, type FamilleId } from './data'
 import { effacerSuivi, exporterSuivi, importerSuivi, sauverSession, type Note } from './store'
 import { comptesHtml, filtrerComptes } from './views/comptes'
 import { fermerFiche, ficheOuverte, ouvrirFiche } from './views/fiche'
-import { actionPratique, apresRenduPratique, basculerSection, pratiqueHtml, saisirPratique, verifierPratique, type Suite } from './views/pratique'
+import { actionPratique, apresRenduPratique, basculerSection, calculerPratique, pratiqueHtml, saisirPratique, verifierPratique, type Suite } from './views/pratique'
 import * as rev from './views/reviser'
 import {
   centrerChiffrier,
@@ -232,6 +232,7 @@ function exporter() {
 
 document.addEventListener('change', async e => {
   const input = e.target as HTMLInputElement
+  if (input.matches('input[data-pr-champ]')) calculerPratique(input)
   if (!input.matches('[data-importer]') || !input.files?.[0]) return
   try {
     const n = importerSuivi(await input.files[0].text())

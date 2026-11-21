@@ -6,6 +6,7 @@ import {
   dateTexte,
   familleId,
   generer,
+  lireMontant,
   lirePartie,
   nb,
   nomCompte,
@@ -126,7 +127,7 @@ function indices(p: Partie, t: Tache): string[] {
         ]
   return [
     'Actif = passif + capitaux propres. Au bilan, les capitaux propres, c’est le capital à la fin de l’état des capitaux propres.',
-    `Les actifs: ${liste(ch.actifs)}. Amortissement cumulé se soustrait.\nLes passifs: ${liste(ch.passifs)}.`,
+    `Les actifs: ${liste(ch.actifs)}. Amortissement cumulé – Équipement se soustrait.\nLes passifs: ${liste(ch.passifs)}.`,
   ]
 }
 
@@ -303,7 +304,7 @@ function majTotaux() {
 }
 
 function totauxHtml(lignes: { d: string; c: string }[]): string {
-  const somme = (k: 'd' | 'c') => lignes.reduce((s, l) => s + (Number(lireNombre(l[k])) || 0), 0)
+  const somme = (k: 'd' | 'c') => Math.round(lignes.reduce((s, l) => s + (lireMontant(l[k]) || 0), 0) * 100) / 100
   const d = somme('d')
   const c = somme('c')
   const egal = d === c && d > 0
@@ -312,9 +313,13 @@ function totauxHtml(lignes: { d: string; c: string }[]): string {
   }`
 }
 
-function lireNombre(t: string): number {
-  const n = Number(t.replace(/[\s  $]/g, '').replace(',', '.'))
-  return Number.isFinite(n) ? n : 0
+// Quand on quitte une case qui contient un calcul, on le remplace par son résultat.
+export function calculerPratique(el: HTMLInputElement) {
+  if (!/\d.*[-+*/×÷xX−]/.test(el.value)) return
+  const v = lireMontant(el.value)
+  if (v === null || Number.isNaN(v)) return
+  el.value = String(v).replace('.', ',')
+  saisirPratique(el)
 }
 
 export function apresRenduPratique() {
