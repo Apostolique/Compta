@@ -626,7 +626,7 @@ const chapitres: Chapitre[] = [
   },
   {
     id: 'pieges',
-    titre: 'Les pièges à l’examen',
+    titre: 'Les pièges fréquents',
     sousTitre: 'Les erreurs fréquentes au chiffrier',
     contenu: () => `
       <ul class="divide-y divide-neutral-200 ${boite} dark:divide-neutral-800">${[

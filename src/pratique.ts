@@ -372,8 +372,8 @@ const g = {
         ? `${c.proprio} lance son entreprise avec ${argent(m)} de ses économies, déposés dans le compte de l’entreprise, et de l’équipement d’une valeur de ${argent(cout)}.`
         : `${c.proprio} lance son entreprise et dépose ${argent(m)} de ses économies dans le compte de l’entreprise.`,
       libelle: 'Mise de fonds du propriétaire',
-      lignes: [D('encaisse', m), ...(apporte ? [D('equipement', cout)] : []), C('apports', apporte ? m + cout : m)],
-      idee: `Ce que le propriétaire met dans l’entreprise fait grossir sa part: c’est un apport, pas un produit. Ce que l’entreprise reçoit${apporte ? ', l’argent et l’équipement,' : ''} est un actif.`,
+      lignes: [D('encaisse', m), ...(apporte ? [D('equipement', cout)] : []), C('capital', apporte ? m + cout : m)],
+      idee: `La mise de fonds qui lance l’entreprise forme le capital du propriétaire: ce n’est pas un produit. Ce que l’entreprise reçoit${apporte ? ', l’argent et l’équipement,' : ''} est un actif.`,
     }
   },
   achatEquipement: c => {
@@ -787,7 +787,7 @@ export const phases: { id: PhaseId; nom: string; court: string; description: str
     description: 'À la fin du mois, on met à jour les comptes qui ne le sont plus. On les inscrit au journal, puis on les reporte au grand livre.',
     aide: [
       ['Les régularisations', 'regularisations'],
-      ['Les pièges à l’examen', 'pieges'],
+      ['Les pièges fréquents', 'pieges'],
     ],
   },
   {
@@ -898,6 +898,8 @@ export interface Chiffres {
   totalCharges: number
   benefice: number
   debut: number
+  // Le premier mois, la mise de fonds qui lance l'entreprise va au crédit du capital.
+  miseDeFonds: number
   apports: number
   retraits: number
   fin: number
@@ -917,7 +919,9 @@ export function chiffres(sc: Scenario, soldes: Soldes): Chiffres {
   const totalProduits = somme(produits)
   const totalCharges = somme(charges)
   const benefice = totalProduits - totalCharges
-  const debut = soldes.capital ? -soldes.capital : 0
+  const capital = soldes.capital ? -soldes.capital : 0
+  const debut = sc.premierMois ? 0 : capital
+  const miseDeFonds = sc.premierMois ? capital : 0
   const apports = soldes.apports ? -soldes.apports : 0
   const retraits = soldes.retraits ?? 0
   return {
@@ -929,9 +933,10 @@ export function chiffres(sc: Scenario, soldes: Soldes): Chiffres {
     totalCharges,
     benefice,
     debut,
+    miseDeFonds,
     apports,
     retraits,
-    fin: debut + apports + benefice - retraits,
+    fin: debut + miseDeFonds + apports + benefice - retraits,
     totalActifs: somme(actifs),
     totalPassifs: somme(passifs),
   }
@@ -954,6 +959,7 @@ export function champsEtat(sc: Scenario, etat: EtatFin, ch: Chiffres): Champ[] {
   if (etat === 'capitaux')
     return [
       { id: 'debut', nom: `Capital au 1er ${m}`, attendu: ch.debut },
+      ...(ch.miseDeFonds ? [{ id: 'mise', nom: 'Plus: mise de fonds initiale', attendu: ch.miseDeFonds }] : []),
       ...(ch.apports ? [{ id: 'apports', nom: 'Plus: apports', attendu: ch.apports }] : []),
       { id: 'benefice', nom: 'Plus: bénéfice net', attendu: ch.benefice },
       { id: 'retraits', nom: 'Moins: retraits', attendu: ch.retraits },

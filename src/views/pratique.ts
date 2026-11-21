@@ -115,10 +115,15 @@ function indices(p: Partie, t: Tache): string[] {
       `Les produits: ${liste(ch.produits)}.\nLes charges: ${liste(ch.charges)}.`,
     ]
   if (t.etat === 'capitaux')
-    return [
-      'Capital à la fin = capital au début + apports + bénéfice net − retraits.',
-      'Le capital au début, c’est le solde du compte Capital dans la balance: les transactions du mois ne le touchent pas. Le bénéfice net vient de l’état des résultats.',
-    ]
+    return sc.premierMois
+      ? [
+          'Capital à la fin = capital au début + mise de fonds initiale + bénéfice net − retraits.',
+          'L’entreprise commence ce mois-ci: le capital au début est 0. Le solde du compte Capital dans la balance, c’est la mise de fonds du propriétaire. Le bénéfice net vient de l’état des résultats.',
+        ]
+      : [
+          'Capital à la fin = capital au début + apports + bénéfice net − retraits.',
+          'Le capital au début, c’est le solde du compte Capital dans la balance: les transactions du mois ne le touchent pas. Le bénéfice net vient de l’état des résultats.',
+        ]
   return [
     'Actif = passif + capitaux propres. Au bilan, les capitaux propres, c’est le capital à la fin de l’état des capitaux propres.',
     `Les actifs: ${liste(ch.actifs)}. Amortissement cumulé se soustrait.\nLes passifs: ${liste(ch.passifs)}.`,
@@ -432,6 +437,7 @@ function etatHtml(sc: Scenario, etat: EtatFin, ch: Chiffres): string {
   } else if (etat === 'capitaux') {
     titre = `État des capitaux propres pour le mois terminé le ${sc.dernierJour} ${m} ${sc.annee}`
     rangs.push({ nom: `Capital au 1er ${m}`, montant: ch.debut })
+    if (ch.miseDeFonds) rangs.push({ nom: 'Plus: mise de fonds initiale', montant: ch.miseDeFonds, retrait: true })
     if (ch.apports) rangs.push({ nom: 'Plus: apports', montant: ch.apports, retrait: true })
     rangs.push({ nom: 'Plus: bénéfice net', montant: ch.benefice, retrait: true })
     rangs.push({ nom: 'Moins: retraits', montant: -ch.retraits, retrait: true })
@@ -867,7 +873,7 @@ function accueilHtml(): string {
       .join('')}</ol>
     <div class="space-y-3">
       ${choix('courte', 'Courte', '6 à 8 transactions et 3 ou 4 régularisations.')}
-      ${choix('complete', 'Complète', '10 à 12 transactions et 4 régularisations ou plus, comme à l’examen.')}
+      ${choix('complete', 'Complète', '10 à 12 transactions et 4 régularisations ou plus.')}
     </div>
     <fieldset class="space-y-2">
       <legend class="text-sm font-semibold ${doux}">Le mois simulé</legend>
