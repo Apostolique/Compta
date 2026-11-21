@@ -540,6 +540,10 @@ const chapitres: Chapitre[] = [
         )
         .join('')}</ol>
       <p class="${lead}">Le <a href="#synthese/chiffrier" class="font-semibold underline underline-offset-4">chiffrier</a> regroupe les étapes ${premiere} à ${derniere} sur une seule feuille. On y part de la balance de vérification et on arrive aux chiffres des états financiers.</p>
+      <a href="#pratique" class="block ${boite} p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/60">
+        <span class="block font-semibold">Faire le cycle au complet →</span>
+        <span class="block text-[15px] ${doux}">La page Pratique te fait passer par chaque étape avec une entreprise différente à chaque fois.</span>
+      </a>
       <details class="group ${boite}">
         <summary class="${resumeRepliable}"><span class="flex-1 font-semibold">Comptes permanents et temporaires</span>${chevron}</summary>
         <div class="space-y-3 border-t border-neutral-200 p-4 text-[15px] leading-relaxed dark:border-neutral-800">

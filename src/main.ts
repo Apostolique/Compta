@@ -3,6 +3,7 @@ import { compteParId, familleParId, type FamilleId } from './data'
 import { effacerSuivi, exporterSuivi, importerSuivi, sauverSession, type Note } from './store'
 import { comptesHtml, filtrerComptes } from './views/comptes'
 import { fermerFiche, ficheOuverte, ouvrirFiche } from './views/fiche'
+import { actionPratique, apresRenduPratique, basculerSection, pratiqueHtml, saisirPratique, verifierPratique, type Suite } from './views/pratique'
 import * as rev from './views/reviser'
 import {
   centrerChiffrier,
@@ -14,14 +15,14 @@ import {
   trouverChapitre,
 } from './views/synthese'
 
-type Page = 'reviser' | 'synthese' | 'comptes'
+type Page = 'reviser' | 'synthese' | 'comptes' | 'pratique'
 
 const main = document.getElementById('main')!
 let pageActuelle: Page | null = null
 
 function lireRoute(): { page: Page; reste: string[] } {
   const [page, ...reste] = location.hash.replace(/^#\/?/, '').split('/').map(decodeURIComponent)
-  if (page === 'synthese' || page === 'comptes') return { page, reste }
+  if (page === 'synthese' || page === 'comptes' || page === 'pratique') return { page, reste }
   return { page: 'reviser', reste }
 }
 
@@ -44,12 +45,15 @@ function rendre() {
     main.innerHTML = syntheseHtml(cible.chapitre)
     centrerChiffrier()
     ancre = cible.ancre
+  } else if (page === 'pratique') {
+    main.innerHTML = pratiqueHtml()
+    apresRenduPratique()
   } else main.innerHTML = comptesHtml()
 
   document.querySelectorAll<HTMLAnchorElement>('[data-onglet]').forEach(a => {
     a.setAttribute('aria-current', a.dataset.onglet === page ? 'page' : 'false')
   })
-  document.title = { reviser: 'Réviser', synthese: 'Synthèse', comptes: 'Comptes' }[page] + ' · Compta'
+  document.title = { reviser: 'Réviser', synthese: 'Synthèse', comptes: 'Comptes', pratique: 'Pratique' }[page] + ' · Compta'
 
   if (ancre) defiler(ancre)
   else window.scrollTo(0, 0)
@@ -73,6 +77,18 @@ function rendreReviser() {
   main.innerHTML = rev.reviserHtml()
   const apres = main.querySelector<HTMLElement>('[data-defilement]')
   if (avant && apres && avant.dataset.defilement === apres.dataset.defilement) apres.scrollTop = avant.scrollTop
+}
+
+// Garde la position de la page, sauf quand on passe à une autre tâche.
+function rendrePratique(suite: Suite) {
+  if (!suite) return
+  main.innerHTML = pratiqueHtml()
+  apresRenduPratique()
+  if (suite === 'haut') {
+    const tache = main.querySelector('[data-tache]')
+    if (tache && tache.getBoundingClientRect().top < 0) tache.scrollIntoView({ block: 'start' })
+    else if (!tache) window.scrollTo(0, 0)
+  }
 }
 
 let confirmationEffacer = false
@@ -99,6 +115,11 @@ document.addEventListener('click', e => {
   }
   const action = el.dataset.action!
   const valeur = el.dataset.valeur ?? ''
+
+  if (action.startsWith('pr-')) {
+    rendrePratique(actionPratique(action, el))
+    return
+  }
 
   switch (action) {
     case 'fiche':
@@ -234,7 +255,24 @@ function message(texte: string, erreur: boolean) {
 document.addEventListener('input', e => {
   const input = e.target as HTMLInputElement
   if (input.matches('[data-recherche-input]')) filtrerComptes(input.value)
+  if (input.matches('[data-pr-champ]')) saisirPratique(input)
 })
+
+document.addEventListener('submit', e => {
+  const form = e.target as HTMLElement
+  if (!form.matches('[data-pr-form]')) return
+  e.preventDefault()
+  rendrePratique(verifierPratique())
+})
+
+// « toggle » ne remonte pas jusqu'au document: on l'écoute à la descente.
+document.addEventListener(
+  'toggle',
+  e => {
+    if (e.target instanceof HTMLDetailsElement && e.target.dataset.section) basculerSection(e.target)
+  },
+  true,
+)
 
 document.addEventListener('keydown', e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return

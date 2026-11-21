@@ -11,7 +11,7 @@
 
 @layer components {
   .onglet {
-    @apply rounded-lg px-3 py-1.5 text-neutral-600 dark:text-neutral-300;
+    @apply rounded-lg px-2 py-1.5 text-neutral-600 min-[400px]:px-3 dark:text-neutral-300;
   }
   .onglet[aria-current='page'] {
     @apply bg-boost text-neutral-950 shadow-sm;
